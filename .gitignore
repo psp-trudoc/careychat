@@ -37,8 +37,11 @@ Icon?
 .tags*
 
 build/
-.android/
-.ios/
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
 .flutter-plugins
 .flutter-plugins-dependencies
 
