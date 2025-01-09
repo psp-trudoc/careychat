@@ -1,7 +1,5 @@
 import 'package:carey/features/carey_home/presentation/widgets/carey_message_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:amplify_datastore/amplify_datastore.dart';
-import 'package:amplify_flutter/amplify.dart';
 
 class CareyHomePage extends StatefulWidget {
   const CareyHomePage({super.key});

@@ -14,9 +14,9 @@ class ConnectionCubit extends Cubit<InternetState> {
 
   initialize() async {
     final result = await Connectivity().checkConnectivity();
-    _checkConnection(result);
-    _streamSubscription =
-        connectivity.onConnectivityChanged.listen(_checkConnection);
+    // _checkConnection(result);
+    // _streamSubscription =
+    //     connectivity.onConnectivityChanged.listen(_checkConnection);
   }
 
   _checkConnection(ConnectivityResult result) {

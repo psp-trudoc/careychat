@@ -1,7 +1,34 @@
+import 'dart:convert';
+
 import 'package:carey/features/carey_home/presentation/pages/carey_home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_api/amplify_api.dart';
+import 'package:flutter/services.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Ensures Flutter is properly initialized before any async operations.
+  await configureAmplify(); // Call the Amplify configuration here.
+  runApp(const MyApp());
+}
+
+Future<void> configureAmplify() async {
+  try {
+    // Load the JSON file
+    final configString = await rootBundle.loadString('assets/aws/config.json');
+    final amplifyConfig = jsonDecode(configString);
+
+    // Add Amplify plugins
+    final apiPlugin = AmplifyAPI();
+    await Amplify.addPlugins([apiPlugin]);
+
+    // Configure Amplify using the loaded config
+    await Amplify.configure(jsonEncode(amplifyConfig));
+    print('Amplify configured successfully');
+  } catch (e) {
+    print('Failed to configure Amplify: $e');
+  }
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,4 +45,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
