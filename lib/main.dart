@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:carey/features/carey_home/presentation/pages/carey_home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_api/amplify_api.dart';
 import 'package:flutter/services.dart';
 
 void main() async {
