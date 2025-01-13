@@ -1,13 +1,24 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:carey/core/loggers/app_locale.dart';
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:carey/app_provider_scope.dart';
 import 'package:carey/core/loggers/app_logger.dart';
+import 'package:carey/core/network/api_client.dart';
 import 'package:carey/core/network/connection_cubit.dart';
-import 'package:carey/core/theme/app_theme.dart';
-import 'package:carey/core/widgets/pip/pip_material_app.dart';
+import 'package:carey/core/network/dio_client.dart';
+import 'package:carey/core/utils/app_pref_service.dart';
 import 'package:carey/core/widgets/refresh_widget_tree.dart';
+import 'package:carey/features/carey_home/data/datasource/chat_data_source.dart';
+import 'package:carey/features/carey_home/data/repository/chat_connect_repository_imp.dart';
+import 'package:carey/features/carey_home/domain/repository/chat_connect_repository.dart';
+import 'package:carey/features/carey_home/domain/usecase/chat_register_use_case.dart';
+import 'package:carey/features/carey_home/presentation/bloc/index.dart';
+import 'package:carey/features/carey_home/presentation/pages/carey_home_page.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -46,6 +57,7 @@ Future<void> setupInjections() async {
   await setupDataSource();
   await setupUseCases();
   await setupBlocs();
+  await configureAmplify();
 }
 
 Future<void> setupAppHelpers() async {
@@ -61,24 +73,37 @@ Future<void> setupFlavorConfig() async {
   // await AppConfig.loadEnv(F.envName);
 }
 
-Future<void> setupSharedPrefsInjections() async {}
+Future<void> setupSharedPrefsInjections() async {
+  getIt.registerFactory<AppPreferenceService>(() => AppPreferenceService());
+}
 
-Future<void> setupNetworking() async {}
+Future<void> setupNetworking() async {
+  final dioClient = DioHelper.configureDio();
+  getIt.registerSingleton<APIClient>(APIClient(dioClient));
+  getIt.registerLazySingleton(() => Connectivity());
+  getIt.registerFactory(() => ConnectionCubit(getIt()));
+}
 
 Future<void> setupFirebase() async {}
 
 Future<void> setupSystemSingletons() async {}
 
-Future<void> setupUseCases() async {}
+Future<void> setupUseCases() async {
+  getIt.registerLazySingleton(() => ChatRegisterUserUseCase(getIt()));
+}
 
 Future<void> setupBlocs() async {
-  // getIt.registerFactory<LanguageCubit>(() => LanguageCubit(getIt()));
+  print("setupBlocs");
+  getIt.registerFactory<ChatConnectBloc>(() => ChatConnectBloc(getIt()));
 }
 
 Future<void> setupDataSource() async {
-  // getIt.registerLazySingleton<UserDataSource>(
-  //       () => UserDataSourceImpl(getIt()),
-  // );
+  getIt.registerLazySingleton<ChatConnectRepository>(
+    () => ChatConnectRepositoryImp(getIt()),
+  );
+  getIt.registerLazySingleton<ChatDataSource>(
+    () => ChatDataSourceImpl(getIt()),
+  );
 }
 
 Future<void> setupDateTime() async {
@@ -89,6 +114,25 @@ Future<void> setupDateTime() async {
   // DateFormat.useNativeDigitsByDefaultFor("ar", false);
 }
 
+Future<void> configureAmplify() async {
+  try {
+    // Load the JSON file
+    final configString =
+        await rootBundle.loadString('assets/aws/awsconfiguration.json');
+    final amplifyConfig = jsonDecode(configString);
+
+    // Add Amplify plugins
+    final apiPlugin = AmplifyAPI();
+    await Amplify.addPlugins([apiPlugin]);
+
+    // Configure Amplify using the loaded config
+    // await Amplify.configure(jsonEncode(amplifyConfig));
+    print('Amplify configured successfully');
+  } catch (e) {
+    print('Failed to configure Amplify: $e');
+  }
+}
+
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
@@ -97,65 +141,36 @@ class MainApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MainApp> with WidgetsBindingObserver {
-  void _startBleReadingsService() async {
-    // WidgetsFlutterBinding.ensureInitialized();
-    // FlutterForegroundTask.initCommunicationPort();
-    // FlutterForegroundTask.addTaskDataCallback(onReceiveTaskData);
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   requestPermissions();
-    //   initService();
-    //   _startService();
-    // });
-  }
-
-  void onReceiveTaskData(Object data) {
-    // final context = getIt<AppRouter>().navigatorKey.currentContext;
-    // if (context != null) {
-    //   startReading(context);
-    //   getIt<BleHelper>().readingStream.listen((event) {
-    //     if (event is GlucoseRecordModel) {
-    //       Navigator.push(
-    //         context,
-    //         MaterialPageRoute(
-    //           builder: (context) => const
-    //           VitalsLoggingDetailsPage(
-    //               logType: VitalsLoggingTypes.bloodSugar),
-    //         ),
-    //       );
-    //     }
-    //   });
-    // }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return EasyLocalization(
-      key: widget.key,
-      supportedLocales: [AppLocale.en.instance, AppLocale.ar.instance],
-      fallbackLocale: AppLocale.en.instance,
-      useFallbackTranslations: true,
-      saveLocale: true,
-      path: languagePath,
+    return AppProviderScope(
       child: RefreshWidgetTree(
         child: ScreenUtilInit(
           designSize: const Size(2160, 1440),
           minTextAdapt: true,
           splitScreenMode: true,
-          builder: (context, __) =>
-              BlocListener<ConnectionCubit, InternetState>(
-                  listenWhen: (previous, current) => previous != current,
-                  listener: (context, internet) =>
-                      checkInternet(internet, context),
-                  child: PiPMaterialApp.router(
-                    debugShowCheckedModeBanner: kDebugMode,
-                    localizationsDelegates: context.localizationDelegates,
-                    supportedLocales: context.supportedLocales,
-                    locale: context.locale,
-                    themeMode: ThemeMode.light,
-                    theme: AppTheme.lightTheme,
-                    darkTheme: AppTheme.darkTheme,
-
-                  )),
+          child: MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: const CareyHomePage(),
+          ),
+          // builder: (context, __) =>
+          //     BlocListener<ConnectionCubit, InternetState>(
+          //         listenWhen: (previous, current) => previous != current,
+          //         listener: (context, internet) =>
+          //             checkInternet(internet, context),
+          //         child: )
+          // PiPMaterialApp.router(
+          //   debugShowCheckedModeBanner: kDebugMode,
+          //   localizationsDelegates: context.localizationDelegates,
+          //   supportedLocales: context.supportedLocales,
+          //   locale: context.locale,
+          //   themeMode: ThemeMode.light,
+          //   theme: AppTheme.lightTheme,
+          //   darkTheme: AppTheme.darkTheme,
+          // )),
         ),
       ),
     );
