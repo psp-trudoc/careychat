@@ -18,6 +18,7 @@ import 'package:carey/features/carey_home/domain/repository/chat_connect_reposit
 import 'package:carey/features/carey_home/domain/usecase/chat_register_use_case.dart';
 import 'package:carey/features/carey_home/presentation/bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/pages/carey_home_page.dart';
+import 'package:carey/flavor/flavors.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,8 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
+
+import 'core/config/app_config.dart';
 
 final getIt = GetIt.instance;
 
@@ -41,6 +44,7 @@ Future<void> setupScreenSettings() async {
 }
 
 Future<void> setupInjections() async {
+  print("setupInjections");
   await setupFlavorConfig();
   // Bloc.observer = const AppBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,11 +74,15 @@ Future<void> setupAppHelpers() async {
 }
 
 Future<void> setupFlavorConfig() async {
-  // await AppConfig.loadEnv(F.envName);
+  print("setupFlavorConfig 1");
+print(F.envName);
+  await AppConfig.loadEnv(F.envName);
+  print("setupFlavorConfig 2");
 }
 
 Future<void> setupSharedPrefsInjections() async {
   getIt.registerFactory<AppPreferenceService>(() => AppPreferenceService());
+  print("setupSharedPrefsInjections");
 }
 
 Future<void> setupNetworking() async {
@@ -82,6 +90,7 @@ Future<void> setupNetworking() async {
   getIt.registerSingleton<APIClient>(APIClient(dioClient));
   getIt.registerLazySingleton(() => Connectivity());
   getIt.registerFactory(() => ConnectionCubit(getIt()));
+  print("setupNetworking");
 }
 
 Future<void> setupFirebase() async {}
