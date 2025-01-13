@@ -55,3 +55,5 @@ app.*.map.json
 .fvm/
 
 /pubspec.lock
+/lib/core/network/api_client.dart
+/lib/generated
