@@ -1,0 +1,166 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "uae Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": ["--flavor", "uae"],
+      "program": "lib/flavor/main_uae.dart"
+    },
+    {
+      "name": "uae Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": ["--flavor", "uae"],
+      "program": "lib/flavor/main_uae.dart"
+    },
+    {
+      "name": "uae Release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": ["--flavor", "uae"],
+      "program": "lib/flavor/main_uae.dart"
+    },
+    {
+      "name": "uaeRelease Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": ["--flavor", "uae"],
+      "program": "lib/flavor/main_uae.dart"
+    },
+    {
+      "name": "uaeStaging Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": ["--flavor", "uaeStaging"],
+      "program": "lib/flavor/main_uae_staging.dart"
+    },
+    {
+      "name": "uaeStaging run",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": ["--flavor", "uaeStaging"],
+      "program": "lib/flavor/main_uae_staging.dart",
+      "noDebug": true
+    },
+    {
+      "name": "uaeStaging Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": ["--flavor", "uaeStaging"],
+      "program": "lib/flavor/main_uae_staging.dart"
+    },
+    {
+      "name": "uaeStaging Release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": ["--flavor", "uaeStaging"],
+      "program": "lib/flavor/main_uae_staging.dart"
+    },
+    {
+      "name": "uaeHotfix Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": ["--flavor", "uaeHotfix"],
+      "program": "lib/flavor/main_uae_hotfix.dart"
+    },
+    {
+      "name": "uaeHotfix Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": ["--flavor", "uaeHotfix"],
+      "program": "lib/flavor/main_uae_hotfix.dart"
+    },
+    {
+      "name": "uaeHotfix Release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": ["--flavor", "uaeHotfix"],
+      "program": "lib/flavor/main_uae_hotfix.dart"
+    },
+    {
+      "name": "ksa Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": ["--flavor", "ksa"],
+      "program": "lib/flavor/main_ksa.dart"
+    },
+    {
+      "name": "ksa Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": ["--flavor", "ksa"],
+      "program": "lib/flavor/main_ksa.dart"
+    },
+    {
+      "name": "ksa Release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": ["--flavor", "ksa"],
+      "program": "lib/flavor/main_ksa.dart"
+    },
+    {
+      "name": "ksaStaging Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": ["--flavor", "ksaStaging"],
+      "program": "lib/flavor/main_ksa_staging.dart"
+    },
+    {
+      "name": "ksaStaging Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": ["--flavor", "ksaStaging"],
+      "program": "lib/flavor/main_ksa_staging.dart"
+    },
+    {
+      "name": "ksaStaging Release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": ["--flavor", "ksaStaging"],
+      "program": "lib/flavor/main_ksa_staging.dart"
+    },
+    {
+      "name": "ksaHotfix Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": ["--flavor", "ksaHotfix"],
+      "program": "lib/flavor/main_ksa_hotfix.dart"
+    },
+    {
+      "name": "ksaHotfix Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": ["--flavor", "ksaHotfix"],
+      "program": "lib/flavor/main_ksa_hotfix.dart"
+    },
+    {
+      "name": "ksaHotfix Release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": ["--flavor", "ksaHotfix"],
+      "program": "lib/flavor/main_ksa_hotfix.dart"
+    }
+  ]
+}
