@@ -10,3 +10,5 @@ class CreateUserEvent extends ChatConnectEvent {
   CreateUserEvent(
       {required this.userId, required this.name, required this.hcName});
 }
+
+class GetMetaDataEvent extends ChatConnectEvent {}

@@ -11,23 +11,19 @@ class TokenInterceptor extends Interceptor {
   RequestOptions addAuthHeader(RequestOptions options) {
     final token = pref.getString(AppKeys.authToken);
     if (token != '') {
-      options.headers[AppKeys.authorizationHeader] = 'Bearer $token';
+      // options.headers[AppKeys.authorizationHeader] = 'Bearer $token';
     }
     return options;
   }
 
   RequestOptions addAppHeader(RequestOptions options) {
-    // final String appTypeValue = dotenv.get(AppKeys.nexusAppType);
-    // options.headers[AppKeys.appName] = F.appName;
-    // final appInfo = getIt<AppInfo>();
-    // options.headers[AppKeys.appVersion] = appInfo.version;
-    // options.headers[AppKeys.apiAppFlavor] = F.apiAppFlavor;
-    // final String appCurrentLocale = pref.getString(AppKeys.appCurrentLocale);
-    // options.headers[AppKeys.language] = appCurrentLocale.isNotEmpty
-    //     ? appCurrentLocale
-    //     : LanguageState.en().locale.languageCode;
-    // options.headers[AppKeys.xSource] = AppKeys.xSourceValue;
-    // options.headers[AppKeys.appType] = appTypeValue;
+    options.headers[AppKeys.accessToken] =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbmNyeXB0ZWQiOiJVMkZzZEdWa1gxL0M3eFdxeFF3UERMNHROazZzdGZjQXlLN1NDMU5vcldYVmd1QzhFRExlWk9NdUNyS3BCSDJER2xJMkRoWitzNHZuVGRLOXpLbldZVVdzZzRMWjFVQTFrYjBBT09JSW9lQT0iLCJpYXQiOjE3MzY0ODkzMTQsImV4cCI6MTczNzc4NTMxNH0.mRiA6lqVuI0KT3VjAWmzV0_6R6f0_CrmiisWNY6QFC4";
+    options.headers[AppKeys.apiChecksum] =
+        "aHR0cHM6Ly9jaGF0LndlbGx0aHkubWUvdXNlci9yZWdpc3Rlcg==";
+    options.headers[AppKeys.idToken] =
+        "U2FsdGVkX19m/K9BWtm+03BXUS9QHkrlFkUEjbmgljQ=";
+
     return options;
   }
 
@@ -44,6 +40,7 @@ class TokenInterceptor extends Interceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     // Do something with your response
+    print(response);
     super.onResponse(response, handler);
   }
 

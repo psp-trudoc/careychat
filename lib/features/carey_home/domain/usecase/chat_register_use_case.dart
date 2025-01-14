@@ -1,5 +1,9 @@
+import 'dart:ffi';
+
 import 'package:carey/core/errors/failure.dart';
+import 'package:carey/features/carey_home/domain/entities/chat_register_user.dart';
 import 'package:carey/features/carey_home/domain/entities/chat_user.dart';
+import 'package:carey/features/carey_home/domain/entities/conversation_meta_data.dart';
 import 'package:carey/features/carey_home/domain/repository/chat_connect_repository.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -8,7 +12,17 @@ class ChatRegisterUserUseCase {
 
   ChatRegisterUserUseCase(this.chatRepository);
 
-  Future<Either<Failure, ChatUser>> call(String userId, String name) async {
+  Future<Either<Failure, ChatRegisterUserModel>> register(
+      String userId, String name) async {
     return await chatRepository.registerUser(userId, name);
   }
+
+  Future<Either<Failure, Int64>> createConversation(String token) async {
+    return await chatRepository.createConversation(token);
+  }
+
+  Future<Either<Failure, ConversationMetaData>> getConversationMetaData() async {
+    return await chatRepository.getConversationMetaData();
+  }
+
 }

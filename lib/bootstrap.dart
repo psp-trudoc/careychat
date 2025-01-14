@@ -45,7 +45,7 @@ Future<void> setupScreenSettings() async {
 
 Future<void> setupInjections() async {
   print("setupInjections");
-  await setupFlavorConfig();
+ // await setupFlavorConfig();
   // Bloc.observer = const AppBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   EasyLocalization.ensureInitialized();
@@ -75,7 +75,7 @@ Future<void> setupAppHelpers() async {
 
 Future<void> setupFlavorConfig() async {
   print("setupFlavorConfig 1");
-print(F.envName);
+  print(F.envName);
   await AppConfig.loadEnv(F.envName);
   print("setupFlavorConfig 2");
 }
