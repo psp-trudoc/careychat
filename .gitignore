@@ -57,3 +57,4 @@ app.*.map.json
 /pubspec.lock
 /lib/core/network/api_client.dart
 /lib/generated
+/lib/core/network/api_client.g.dart
