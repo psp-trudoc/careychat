@@ -50,6 +50,7 @@ dependencies:
   device_preview: ^1.1.0
   shared_preferences: ^2.2.2
   chucker_flutter: ^1.6.3
+  mqtt_client: ^10.3.0
 
 dev_dependencies:
   flutter_test:

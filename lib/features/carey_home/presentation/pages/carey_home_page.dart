@@ -1,3 +1,4 @@
+import 'package:carey/core/network/mqtt_service.dart';
 import 'package:carey/core/utils/app_utils.dart';
 import 'package:carey/features/carey_home/domain/entities/chat_message.dart';
 import 'package:carey/features/carey_home/presentation/bloc/index.dart';
@@ -21,6 +22,8 @@ class CareyHomePageState extends State<CareyHomePage> {
   void initState() {
     super.initState();
     context.read<ChatConnectBloc>().add(GetMetaDataEvent());
+
+    MQTTService().connectChat();
   }
 
   void _sendMessage() {

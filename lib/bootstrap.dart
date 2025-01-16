@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:amplify_api/amplify_api.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:carey/app_provider_scope.dart';
 import 'package:carey/core/loggers/app_logger.dart';
 import 'package:carey/core/network/api_client.dart';
@@ -45,7 +42,7 @@ Future<void> setupScreenSettings() async {
 
 Future<void> setupInjections() async {
   print("setupInjections");
- // await setupFlavorConfig();
+  // await setupFlavorConfig();
   // Bloc.observer = const AppBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   EasyLocalization.ensureInitialized();
@@ -61,7 +58,6 @@ Future<void> setupInjections() async {
   await setupDataSource();
   await setupUseCases();
   await setupBlocs();
-  await configureAmplify();
 }
 
 Future<void> setupAppHelpers() async {
@@ -121,25 +117,6 @@ Future<void> setupDateTime() async {
   // timeago.setLocaleMessages('ar_short', CustomShortMessages());
   // timeago.setLocaleMessages('ar', CustomMessages());
   // DateFormat.useNativeDigitsByDefaultFor("ar", false);
-}
-
-Future<void> configureAmplify() async {
-  try {
-    // Load the JSON file
-    final configString =
-        await rootBundle.loadString('assets/aws/awsconfiguration.json');
-    final amplifyConfig = jsonDecode(configString);
-
-    // Add Amplify plugins
-    final apiPlugin = AmplifyAPI();
-    await Amplify.addPlugins([apiPlugin]);
-
-    // Configure Amplify using the loaded config
-    // await Amplify.configure(jsonEncode(amplifyConfig));
-    print('Amplify configured successfully');
-  } catch (e) {
-    print('Failed to configure Amplify: $e');
-  }
 }
 
 class MainApp extends StatefulWidget {
