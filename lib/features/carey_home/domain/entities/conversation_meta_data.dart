@@ -1,49 +1,23 @@
+import 'dart:ffi';
+
 class ConversationMetaData {
-  int id;
-  String packageName;
-  String packageDescription;
-  String? preparation;
-  String? specimen;
-  String? whenToGetTested;
-  String? testsIncluded;
-  int labId;
-  String labName;
-  String? labAddress;
-  double price;
-  int discount;
-  String currency;
-  double priceAfterDiscount;
-  int testCount;
+  int? convId;
+  int? unreadCount;
+  int? lastMessageAt;
+  String? status;
 
   ConversationMetaData({
-    required this.id,
-    required this.packageName,
-    required this.packageDescription,
-    this.preparation,
-    this.specimen,
-    this.whenToGetTested,
-    this.testsIncluded,
-    required this.labName,
-    required this.labId,
-    this.labAddress,
-    required this.price,
-    required this.discount,
-    required this.currency,
-    required this.priceAfterDiscount,
-    required this.testCount,
+    this.convId,
+    this.unreadCount,
+    this.lastMessageAt,
+    this.status,
   });
 
   factory ConversationMetaData.fromJson(Map<String, dynamic> json) {
     return ConversationMetaData(
-        id: json['id'],
-        packageName: json['packageName'],
-        packageDescription: json['packageName'],
-        labName: json['packageName'],
-        labId: json['packageName'],
-        price: json['packageName'],
-        discount: json['packageName'],
-        currency: json['packageName'],
-        priceAfterDiscount: json['packageName'],
-        testCount: json['packageName']);
+        convId: json['conv_id'],
+        unreadCount: json['unread_count'],
+        lastMessageAt: json['last_message_at'],
+        status: json['status']);
   }
 }

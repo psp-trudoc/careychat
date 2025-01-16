@@ -45,7 +45,10 @@ class CareyHomePageState extends State<CareyHomePage> {
             ),
           );
 
-      // _messageController.clear();
+      _messageController.clear();
+
+
+
       // Simulate receiving a reply
       // Future.delayed(const Duration(seconds: 1), () {
       //   setState(() {
