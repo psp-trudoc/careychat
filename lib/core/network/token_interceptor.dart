@@ -18,11 +18,11 @@ class TokenInterceptor extends Interceptor {
 
   RequestOptions addAppHeader(RequestOptions options) {
     options.headers[AppKeys.accessToken] =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbmNyeXB0ZWQiOiJVMkZzZEdWa1gxL0M3eFdxeFF3UERMNHROazZzdGZjQXlLN1NDMU5vcldYVmd1QzhFRExlWk9NdUNyS3BCSDJER2xJMkRoWitzNHZuVGRLOXpLbldZVVdzZzRMWjFVQTFrYjBBT09JSW9lQT0iLCJpYXQiOjE3MzY0ODkzMTQsImV4cCI6MTczNzc4NTMxNH0.mRiA6lqVuI0KT3VjAWmzV0_6R6f0_CrmiisWNY6QFC4";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbmNyeXB0ZWQiOiJVMkZzZEdWa1gxOXZVY050ZEEvbjRvQndaSGtOVy96Z3BFdzFQZ3UrOGRKemN0MFVpOTI4MENMQUpvY1Z0N01aQllFM1ZjaDFPTmVnQm1aY2xOQzc3TWRJRVJjWHFWY2FiM0FoajdSZkludz0iLCJpYXQiOjE3MzY4NDYyODcsImV4cCI6MTczODE0MjI4N30.N3ErVF5hmszVLB-V8OwK9K_O4SIPchr7slF9uAaVh5U";
     options.headers[AppKeys.apiChecksum] =
-        "aHR0cHM6Ly9jaGF0LndlbGx0aHkubWUvdXNlci9yZWdpc3Rlcg==";
+        "aHR0cHM6Ly9ibGFkZS53ZWxsdGh5Lm1lL3YzL3NldHRpbmcvdjIvZGF0YS83ODg1My8yMDI1LTAxLTE0VDA5OjIxOjIzWg==";
     options.headers[AppKeys.idToken] =
-        "U2FsdGVkX19m/K9BWtm+03BXUS9QHkrlFkUEjbmgljQ=";
+        "U2FsdGVkX1+p7EA+7KddnmbvOkOjjuNngocgQdEkLPE=";
 
     return options;
   }

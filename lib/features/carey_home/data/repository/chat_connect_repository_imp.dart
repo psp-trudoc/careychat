@@ -3,8 +3,8 @@ import 'dart:ffi';
 import 'package:carey/core/errors/exceptions.dart';
 import 'package:carey/core/errors/failure.dart';
 import 'package:carey/features/carey_home/data/datasource/chat_data_source.dart';
+import 'package:carey/features/carey_home/domain/entities/chat_message.dart';
 import 'package:carey/features/carey_home/domain/entities/chat_register_user.dart';
-import 'package:carey/features/carey_home/domain/entities/chat_user.dart';
 import 'package:carey/features/carey_home/domain/entities/conversation_meta_data.dart';
 import 'package:carey/features/carey_home/domain/repository/chat_connect_repository.dart';
 import 'package:fpdart/fpdart.dart';
@@ -56,5 +56,20 @@ class ChatConnectRepositoryImp extends ChatConnectRepository {
       return Left(UnknownFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, ChatMessage>> sendMessage(ChatMessage message) async {
+    try {
+      final metaData = await remoteDataSource.sendMessage(message);
+      return Right(metaData);
+    } on BadRequest catch (e) {
+      return Left(BadRequestFailure(e.toString()));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.toString()));
+    } on Exception catch (e) {
+      return Left(UnknownFailure(e.toString()));
+    }
+  }
+
 
 }

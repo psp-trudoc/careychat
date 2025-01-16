@@ -1,5 +1,6 @@
 import 'package:carey/bootstrap.dart';
 import 'package:carey/features/carey_home/presentation/bloc/index.dart';
+import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,6 +15,9 @@ class AppProviderScope extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => getIt<ChatConnectBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<SendMessageBloc>(),
         ),
       ],
       child: child,

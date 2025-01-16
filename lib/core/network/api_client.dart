@@ -20,6 +20,14 @@ abstract class APIClient {
         @Header("Content-Type") String contentType = "application/json",
       });
 
+  @POST("{path}")
+  Future<HttpResponse> postWithHeaders(
+      @Path("path") String path,
+      @Body() dynamic jsonData, {
+        @Header("Content-Type") String contentType = "application/json",
+        @Header("token") String? token,
+      });
+
   // Method for posting form data
   @POST("{path}")
   @FormUrlEncoded()

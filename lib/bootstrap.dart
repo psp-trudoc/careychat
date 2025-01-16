@@ -15,8 +15,10 @@ import 'package:carey/core/widgets/refresh_widget_tree.dart';
 import 'package:carey/features/carey_home/data/datasource/chat_data_source.dart';
 import 'package:carey/features/carey_home/data/repository/chat_connect_repository_imp.dart';
 import 'package:carey/features/carey_home/domain/repository/chat_connect_repository.dart';
+import 'package:carey/features/carey_home/domain/usecase/chat_message_use_case.dart';
 import 'package:carey/features/carey_home/domain/usecase/chat_register_use_case.dart';
 import 'package:carey/features/carey_home/presentation/bloc/index.dart';
+import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/pages/carey_home_page.dart';
 import 'package:carey/flavor/flavors.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -26,8 +28,6 @@ import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:auto_route/auto_route.dart';
 
 import 'core/config/app_config.dart';
 
@@ -90,7 +90,6 @@ Future<void> setupNetworking() async {
   getIt.registerSingleton<APIClient>(APIClient(dioClient));
   getIt.registerLazySingleton(() => Connectivity());
   getIt.registerFactory(() => ConnectionCubit(getIt()));
-  print("setupNetworking");
 }
 
 Future<void> setupFirebase() async {}
@@ -99,11 +98,12 @@ Future<void> setupSystemSingletons() async {}
 
 Future<void> setupUseCases() async {
   getIt.registerLazySingleton(() => ChatRegisterUserUseCase(getIt()));
+  getIt.registerLazySingleton(() => ChatMessageUseCase(getIt()));
 }
 
 Future<void> setupBlocs() async {
-  print("setupBlocs");
   getIt.registerFactory<ChatConnectBloc>(() => ChatConnectBloc(getIt()));
+  getIt.registerFactory<SendMessageBloc>(() => SendMessageBloc(getIt()));
 }
 
 Future<void> setupDataSource() async {

@@ -2,7 +2,6 @@ import 'dart:ffi';
 
 import 'package:carey/core/errors/failure.dart';
 import 'package:carey/features/carey_home/domain/entities/chat_register_user.dart';
-import 'package:carey/features/carey_home/domain/entities/chat_user.dart';
 import 'package:carey/features/carey_home/domain/entities/conversation_meta_data.dart';
 import 'package:carey/features/carey_home/domain/repository/chat_connect_repository.dart';
 import 'package:fpdart/fpdart.dart';
