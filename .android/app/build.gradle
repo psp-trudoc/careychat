@@ -1,6 +1,10 @@
 def flutterPluginVersion = "managed"
 
 apply plugin: "com.android.application"
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("../local.properties")))
+
+def minSdkVersionFromFile = localProperties.getProperty('flutter.minSdkVersion')?.toInteger() ?: 24
 
 android {
     // Conditional for compatibility with AGP <4.2.
@@ -17,7 +21,7 @@ android {
 
     defaultConfig {
         applicationId = "com.carey.carey.host"
-        minSdk = 24
+        minSdk = minSdkVersionFromFile
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"

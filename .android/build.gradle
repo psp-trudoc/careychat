@@ -22,6 +22,10 @@ allprojects {
 
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
+def minSdkVersion = localProperties.getProperty('flutter.minSdkVersion')?.toInteger() ?: 24
 
 android {
     // Conditional for compatibility with AGP <4.2.
@@ -31,7 +35,7 @@ android {
 
     compileSdk = 34
     defaultConfig {
-        minSdk = 24
+        minSdk = minSdkVersion
     }
 }
 

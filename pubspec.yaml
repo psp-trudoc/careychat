@@ -1,5 +1,6 @@
 name: carey
 description: "A new chat project."
+homepage: https://yourwebsite.com
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -15,7 +16,7 @@ description: "A new chat project."
 # This version is used _only_ for the Runner app, which is used if you just do
 # a `flutter run` or a `flutter make-host-app-editable`. It has no impact
 # on any other native host app that you embed your Flutter project into.
-version: 1.0.0+1
+version: 1.0.2
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -51,6 +52,8 @@ dependencies:
   shared_preferences: ^2.2.2
   chucker_flutter: ^1.6.3
   mqtt_client: ^10.3.0
+  flutter_chat_ui: ^1.6.15
+  flutter_chat_types: ^3.6.2
 
 dev_dependencies:
   flutter_test:
@@ -74,7 +77,6 @@ flutter:
   # like this:
   assets:
     - env/
-    - env/.env.carey.staging
     - assets/
     - assets/aws/
 
