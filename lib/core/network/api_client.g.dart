@@ -78,6 +78,41 @@ class _APIClient implements APIClient {
   }
 
   @override
+  Future<HttpResponse<dynamic>> postWithHeaders(
+    path,
+    jsonData, {
+    contentType = "application/json",
+    token,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{
+      r'Content-Type': contentType,
+      r'token': token,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = jsonData;
+    final _result =
+        await _dio.fetch(_setStreamType<HttpResponse<dynamic>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              '${path}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data;
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
   Future<HttpResponse<dynamic>> postFormData(
     path,
     formData, {
