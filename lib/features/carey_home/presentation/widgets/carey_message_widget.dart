@@ -38,7 +38,7 @@ class CareyMessageWidget extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              _formatTime(message.timestamp),
+              "_formatTime(message.timestamp)",
               style: TextStyle(
                 color: message.isMine ? Colors.white70 : Colors.black54,
                 fontSize: 12,

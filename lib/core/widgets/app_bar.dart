@@ -6,6 +6,7 @@ import 'package:carey/core/widgets/base_app_bar.dart';
 import 'package:carey/core/widgets/gap.dart';
 import 'package:carey/core/widgets/td_touchable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CareyAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -67,6 +68,7 @@ class TrailingIcon extends StatelessWidget {
         icon ?? navBack,
         width: 40,
         height: 40,
+        color: Colors.red,
       ),
     );
   }
@@ -79,10 +81,20 @@ class LeadingIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(
-      navBack,
-      width: 30,
-      height: 30,
+    return TdTouchable(
+      onTap: () {
+        print("back ----->Z");
+        // AutoRouter.of(context).maybePop();
+
+        const platform = MethodChannel('flutter_module_channel');
+        platform.invokeMethod('dismiss');
+
+      },
+      child: SvgPicture.asset(
+        navBack,
+        width: 30,
+        height: 30,
+      ),
     );
   }
 }

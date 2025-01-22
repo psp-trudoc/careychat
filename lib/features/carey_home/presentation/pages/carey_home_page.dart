@@ -1,8 +1,7 @@
 import 'package:carey/core/network/mqtt_service.dart';
 import 'package:carey/core/utils/app_utils.dart';
 import 'package:carey/core/widgets/app_bar.dart';
-import 'package:carey/features/carey_home/domain/entities/chat_message.dart';
-import 'package:carey/features/carey_home/presentation/bloc/index.dart';
+import 'package:carey/features/carey_home/presentation/bloc/get_messages_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/index.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter/material.dart';
@@ -23,23 +22,27 @@ class CareyHomePageState extends State<CareyHomePage> {
   List<types.Message> _messages = [];
 
   final _user = const types.User(
-    id: 'U79433',
+    id: 'U78853',
   );
 
   @override
   void initState() {
     super.initState();
-    context.read<ChatConnectBloc>().add(GetMetaDataEvent());
+    //  context.read<ChatConnectBloc>().add(GetMetaDataEvent());
 
     MQTTService().connectChat();
+
+    loadHistory();
   }
 
   loadHistory() {
     print("loadHistory");
+
+    context.read<GetMessagesBloc>().add(GetLatestMessagesEvent(
+        conversationId: "61436", type: "latestWithConversationId"));
   }
 
   void _sendMessage() {
-    // if (_messageController.text.trim().isNotEmpty) {
 
     final newMessage = types.TextMessage(
       author: _user,
@@ -60,36 +63,39 @@ class CareyHomePageState extends State<CareyHomePage> {
 
     _messageController.clear();
 
-    // Simulate receiving a reply
-    // Future.delayed(const Duration(seconds: 1), () {
-    //   setState(() {
-    //     _messages.add(ChatMessage(
-    //       message:
-    //           "Thanks for your message! Thanks for your message! Thanks for your message!",
-    //       isMe: false,
-    //       timestamp: DateTime.now(),
-    //     ));
-    //   });
-    // });
-    // }
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: const CareyAppBar(
-          title: "Carey",
-        ),
-        body: Chat(
-          messages: _messages,
-          onAttachmentPressed: _handleAttachmentPressed,
-          onMessageTap: _handleMessageTap,
-          onPreviewDataFetched: _handlePreviewDataFetched,
-          onSendPressed: _handleSendPressed,
-          showUserAvatars: false,
-          showUserNames: true,
-          user: _user,
-        ),
+      appBar: const CareyAppBar(
+        title: "Carey",
+      ),
+      body: BlocBuilder<GetMessagesBloc, GetMessagesState>(
+        builder: buildChat,
+      ));
+
+  Widget buildChat(BuildContext context, GetMessagesState state) {
+    if (state is GetMessagesInProgress) {
+      return const Center(
+        child: CircularProgressIndicator.adaptive(),
       );
+    } else if (state is GetMessagesSuccess) {
+      _messages = state.messages;
+
+      return Chat(
+        messages: state.messages,
+        onAttachmentPressed: _handleAttachmentPressed,
+        onMessageTap: _handleMessageTap,
+        onPreviewDataFetched: _handlePreviewDataFetched,
+        onSendPressed: _handleSendPressed,
+        showUserAvatars: false,
+        showUserNames: true,
+        user: _user,
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
 
   _handleAttachmentPressed() {
     const hc = types.User(

@@ -1,6 +1,7 @@
 class ChatMessage {
   String trackId;
   int id;
+  int timestamp;
   String type;
   String sender;
   String? clientId;
@@ -14,6 +15,7 @@ class ChatMessage {
   ChatMessage({
     required this.trackId,
     required this.id,
+    required this.timestamp,
     required this.type,
     required this.sender,
     this.clientId,
@@ -27,19 +29,18 @@ class ChatMessage {
 
   bool get isMine => sender == "U79433";
 
-  DateTime get timestamp => DateTime.now();
-
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
     return ChatMessage(
       trackId: json['trackId'],
       id: json['id'],
-      type: json['type'],
+      timestamp: json['timestamp'],
+      type: json['type'] ?? "",
       sender: json['sender'],
       clientId: json['clientId'],
       topic: json['topic'],
       body: json['body'],
       mimeType: json['mimeType'],
-      isSent: json['isSent'],
+      isSent: json['isSent'] ?? true,
       senderName: json['senderName'],
     );
   }

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:carey/core/constants/app_routes.dart';
 import 'package:carey/core/errors/exceptions.dart';
 import 'package:carey/core/network/api_client.dart';
+import 'package:carey/features/carey_home/data/model/chat_messages_model.dart';
 import 'package:carey/features/carey_home/domain/entities/chat_message.dart';
 import 'package:carey/features/carey_home/domain/entities/chat_register_user.dart';
 import 'package:carey/features/carey_home/domain/entities/conversation_meta_data.dart';
@@ -17,6 +18,9 @@ abstract class ChatDataSource {
   Future<ConversationMetaData> getConversationMetaData();
 
   Future<ChatMessage> sendMessage(ChatMessage message);
+
+  Future<ChatMessagesResponseModel> getLatestMessages(
+      String conversationId, String type);
 }
 
 class ChatDataSourceImpl implements ChatDataSource {
@@ -134,6 +138,37 @@ class ChatDataSourceImpl implements ChatDataSource {
       print(response.data);
 
       return message;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == HttpStatus.badRequest) {
+        final errorData = e.response!.data;
+        final errorMessage = errorData['message'] ?? 'An error occurred';
+        throw BadRequest(errorMessage);
+      } else {
+        throw Exception(e.message);
+      }
+    }
+  }
+
+  @override
+  Future<ChatMessagesResponseModel> getLatestMessages(
+      String conversationId, String type) async {
+    var jsonData = {
+      "conversationId": conversationId,
+      "type": type,
+      "count": 50,
+    };
+
+    print(jsonData);
+
+    try {
+      final response = await _api.postWithHeaders(
+          AppRoutes.getMessages, jsonData,
+          token:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjY1MDE1LCJpYXQiOjE3MzcwMDQyMzJ9.GnAHuyeMLOn5oJj8pT51a9mV8S6c4zEZs6cohmRKuGw");
+      print("logs got");
+
+      print(response.data);
+      return ChatMessagesResponseModel.fromJson(response.data);
     } on DioException catch (e) {
       if (e.response?.statusCode == HttpStatus.badRequest) {
         final errorData = e.response!.data;

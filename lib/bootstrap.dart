@@ -14,6 +14,7 @@ import 'package:carey/features/carey_home/data/repository/chat_connect_repositor
 import 'package:carey/features/carey_home/domain/repository/chat_connect_repository.dart';
 import 'package:carey/features/carey_home/domain/usecase/chat_message_use_case.dart';
 import 'package:carey/features/carey_home/domain/usecase/chat_register_use_case.dart';
+import 'package:carey/features/carey_home/presentation/bloc/get_messages_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/pages/carey_home_page.dart';
@@ -102,6 +103,7 @@ Future<void> setupUseCases() async {
 Future<void> setupBlocs() async {
   getIt.registerFactory<ChatConnectBloc>(() => ChatConnectBloc(getIt()));
   getIt.registerFactory<SendMessageBloc>(() => SendMessageBloc(getIt()));
+  getIt.registerFactory<GetMessagesBloc>(() => GetMessagesBloc(getIt()));
 }
 
 Future<void> setupDataSource() async {

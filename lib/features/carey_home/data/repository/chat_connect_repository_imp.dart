@@ -8,6 +8,7 @@ import 'package:carey/features/carey_home/domain/entities/chat_register_user.dar
 import 'package:carey/features/carey_home/domain/entities/conversation_meta_data.dart';
 import 'package:carey/features/carey_home/domain/repository/chat_connect_repository.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatConnectRepositoryImp extends ChatConnectRepository {
   final ChatDataSource remoteDataSource;
@@ -44,7 +45,8 @@ class ChatConnectRepositoryImp extends ChatConnectRepository {
   }
 
   @override
-  Future<Either<Failure, ConversationMetaData>> getConversationMetaData() async {
+  Future<Either<Failure, ConversationMetaData>>
+      getConversationMetaData() async {
     try {
       final metaData = await remoteDataSource.getConversationMetaData();
       return Right(metaData);
@@ -71,5 +73,37 @@ class ChatConnectRepositoryImp extends ChatConnectRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, List<types.Message>>> getLatestMessages(
+      String conversationId, String type) async {
+    try {
+      final msgData =
+          await remoteDataSource.getLatestMessages(conversationId, type);
+      return Right(_mapMessagesDataToEntity(msgData.messages ?? []));
+    } on BadRequest catch (e) {
+      return Left(BadRequestFailure(e.toString()));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.toString()));
+    } on Exception catch (e) {
+      return Left(UnknownFailure(e.toString()));
+    }
+  }
 
+  List<types.Message> _mapMessagesDataToEntity(List<ChatMessage> messages) {
+    List<types.Message> msgArray = [];
+
+    if (messages.isNotEmpty) {
+      for (ChatMessage msg in messages) {
+        msgArray.add(types.TextMessage(
+          author: types.User(
+            id: msg.sender,
+          ),
+          createdAt: msg.timestamp,
+          id: msg.trackId,
+          text: msg.body ?? "",
+        ));
+      }
+    }
+    return msgArray;
+  }
 }
