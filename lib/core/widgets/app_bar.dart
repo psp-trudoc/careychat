@@ -5,7 +5,6 @@ import 'package:carey/core/extensions/build_context.dart';
 import 'package:carey/core/widgets/base_app_bar.dart';
 import 'package:carey/core/widgets/gap.dart';
 import 'package:carey/core/widgets/td_touchable.dart';
-import 'package:carey/flavor/flavors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -30,10 +29,10 @@ class CareyAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           const LeadingIcon(),
           const Gap(
-            width: 10,
+            width: defaultPadding,
           ),
           Text(
-            F.title + " " + "$title",
+            title,
             style: context.theme.textTheme.headlineSmall!
                 .copyWith(fontSize: SizeUnit.size18),
             overflow: TextOverflow.ellipsis,
@@ -42,7 +41,7 @@ class CareyAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       ),
-      actions: [trailing ?? const TrailingIcon(icon: navBack)],
+      actions: trailing != null ? [trailing!] : [],
     );
   }
 
@@ -82,8 +81,8 @@ class LeadingIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       navBack,
-      width: 20,
-      height: 20,
+      width: 30,
+      height: 30,
     );
   }
 }

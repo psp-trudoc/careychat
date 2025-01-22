@@ -85,15 +85,19 @@ class CareyHomePageState extends State<CareyHomePage> {
           onMessageTap: _handleMessageTap,
           onPreviewDataFetched: _handlePreviewDataFetched,
           onSendPressed: _handleSendPressed,
-          showUserAvatars: true,
+          showUserAvatars: false,
           showUserNames: true,
           user: _user,
         ),
       );
 
   _handleAttachmentPressed() {
+    const hc = types.User(
+      id: 'H4040',
+    );
+
     final newMessage = types.TextMessage(
-      author: _user,
+      author: hc,
       createdAt: DateTime.now().millisecondsSinceEpoch,
       id: AppUtils.generateTrackId(),
       text: "Halo mike check",
@@ -116,12 +120,8 @@ class CareyHomePageState extends State<CareyHomePage> {
   _handleSendPressed(types.PartialText message) {
     print("_handleSendPressed");
 
-    final _hc = const types.User(
-      id: 'U79444',
-    );
-
     final newMessage = types.TextMessage(
-      author: _hc,
+      author: _user,
       createdAt: DateTime.now().millisecondsSinceEpoch,
       id: AppUtils.generateTrackId(),
       text: message.text.trim(),
