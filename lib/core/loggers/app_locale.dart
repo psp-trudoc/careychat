@@ -39,13 +39,3 @@ class LanguageNameIcon {
   LanguageNameIcon({required this.icon, required this.name});
 }
 
-final Map<String, LanguageNameIcon> localesIconNameMap = {
-  "en": LanguageNameIcon(
-    icon: SvgPicture.asset(enFlag, width: 50, height: 50),
-    name: 'English',
-  ),
-  "ar": LanguageNameIcon(
-    icon: SvgPicture.asset(enFlag, width: 50, height: 50),
-    name: 'عربي',
-  ),
-};

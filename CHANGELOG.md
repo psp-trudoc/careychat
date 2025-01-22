@@ -1,5 +1,5 @@
 # Changelog
 
-## [1.0.2] - Initial Release
+## [1.0.4] - Initial Release
 - Added chat feature.
 - Initial version.

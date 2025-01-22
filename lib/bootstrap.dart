@@ -84,7 +84,9 @@ Future<void> setupSharedPrefsInjections() async {
 Future<void> setupNetworking() async {
   final dioClient = DioHelper.configureDio();
   getIt.registerSingleton<APIClient>(APIClient(dioClient));
-  getIt.registerLazySingleton(() => Connectivity());
+  if (!getIt.isRegistered<Connectivity>()) {
+    getIt.registerLazySingleton(() => Connectivity());
+  }
   getIt.registerFactory(() => ConnectionCubit(getIt()));
 }
 
