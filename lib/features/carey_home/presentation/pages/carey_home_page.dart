@@ -1,3 +1,4 @@
+import 'package:carey/app_provider_scope.dart';
 import 'package:carey/core/constants/config.dart';
 import 'package:carey/core/network/mqtt_service.dart';
 import 'package:carey/core/theme/app_colors.dart';
@@ -35,9 +36,9 @@ class CareyHomePageState extends State<CareyHomePage> {
     super.initState();
     //  context.read<ChatConnectBloc>().add(GetMetaDataEvent());
 
-    MQTTService().connectChat();
+      MQTTService().connectChat();
 
-    loadHistory();
+      loadHistory();
   }
 
   loadHistory() {
@@ -119,6 +120,7 @@ class CareyHomePageState extends State<CareyHomePage> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: const CareyAppBar(
@@ -178,7 +180,6 @@ class CareyHomePageState extends State<CareyHomePage> {
           BlocListener<SendMessageBloc, SendMessageState>(
               listener: (context, state) {
                 setState(() {
-
                   print("STATE: $state");
 
                   if (state is SendMessageInProgress) {

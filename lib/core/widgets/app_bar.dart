@@ -84,10 +84,10 @@ class LeadingIcon extends StatelessWidget {
     return TdTouchable(
       onTap: () {
         print("back ----->Z");
-        // AutoRouter.of(context).maybePop();
+        Navigator.pop(context);
 
-        const platform = MethodChannel('flutter_module_channel');
-        platform.invokeMethod('dismiss');
+        // const platform = MethodChannel('flutter_module_channel');
+        // platform.invokeMethod('dismiss');
 
       },
       child: SvgPicture.asset(

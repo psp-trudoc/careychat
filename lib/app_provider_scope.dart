@@ -5,10 +5,10 @@ import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/in
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AppProviderScope extends StatelessWidget {
+class CareyAppProviderScope extends StatelessWidget {
   final Widget child;
 
-  const AppProviderScope({super.key, required this.child});
+  const CareyAppProviderScope({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

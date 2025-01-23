@@ -47,6 +47,7 @@ class TdAppBar extends StatelessWidget implements PreferredSizeWidget {
           centerTitle: centerTitle,
           elevation: elevation,
           iconTheme: iconTheme,
+          automaticallyImplyLeading: false,  // Hides the back button
         ),
         if (showAppBarDivider)
           Container(

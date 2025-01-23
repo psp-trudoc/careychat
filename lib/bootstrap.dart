@@ -133,7 +133,7 @@ class MainApp extends StatefulWidget {
 class _MyAppState extends State<MainApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
-    return AppProviderScope(
+    return CareyAppProviderScope(
       child: RefreshWidgetTree(
         child: ScreenUtilInit(
           designSize: const Size(2160, 1440),
