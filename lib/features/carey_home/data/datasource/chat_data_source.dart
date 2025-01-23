@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:carey/core/constants/app_routes.dart';
 import 'package:carey/core/errors/exceptions.dart';
 import 'package:carey/core/network/api_client.dart';
+import 'package:carey/core/utils/app_utils.dart';
 import 'package:carey/features/carey_home/data/model/chat_messages_model.dart';
-import 'package:carey/features/carey_home/domain/entities/chat_message.dart';
 import 'package:carey/features/carey_home/domain/entities/chat_register_user.dart';
 import 'package:carey/features/carey_home/domain/entities/conversation_meta_data.dart';
 import 'package:dio/dio.dart';
@@ -17,7 +17,7 @@ abstract class ChatDataSource {
 
   Future<ConversationMetaData> getConversationMetaData();
 
-  Future<ChatMessage> sendMessage(ChatMessage message);
+  Future<bool> sendMessage(String message);
 
   Future<ChatMessagesResponseModel> getLatestMessages(
       String conversationId, String type);
@@ -115,14 +115,14 @@ class ChatDataSourceImpl implements ChatDataSource {
   }
 
   @override
-  Future<ChatMessage> sendMessage(ChatMessage message) async {
+  Future<bool> sendMessage(String message) async {
     var jsonData = {
       "participants": ["U78853", "H4040"],
       "conversationId": "61436",
       "mimeType": "text/plain",
-      "body": message.body,
+      "body": message,
       "sender": "U78853",
-      "trackId": message.trackId,
+      "trackId": AppUtils.generateTrackId(),
       "type": "conversation",
       "clientId": "U78853-E970F891-096A-4ECD-B0E3-08FB2C787FA3",
     };
@@ -137,7 +137,7 @@ class ChatDataSourceImpl implements ChatDataSource {
 
       print(response.data);
 
-      return message;
+      return true;
     } on DioException catch (e) {
       if (e.response?.statusCode == HttpStatus.badRequest) {
         final errorData = e.response!.data;

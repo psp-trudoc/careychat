@@ -1,5 +1,4 @@
 import 'package:carey/core/errors/failure.dart';
-import 'package:carey/features/carey_home/domain/entities/chat_message.dart';
 import 'package:carey/features/carey_home/domain/repository/chat_connect_repository.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -9,7 +8,7 @@ class ChatMessageUseCase {
 
   ChatMessageUseCase(this.chatRepository);
 
-  Future<Either<Failure, ChatMessage>> sendMessage(ChatMessage msg) async {
+  Future<Either<Failure, bool>> sendMessage(String msg) async {
     return await chatRepository.sendMessage(msg);
   }
 

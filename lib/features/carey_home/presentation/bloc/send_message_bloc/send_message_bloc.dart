@@ -4,18 +4,18 @@ class SendMessageBloc extends Bloc<SendMessageEvent, SendMessageState> {
   final ChatMessageUseCase msgUseCase;
 
   SendMessageBloc(this.msgUseCase) : super(SendMessageInitial()) {
-    on<SendMessage>(_onSendMessage);
+    on<SendTextMessage>(_onSendMessage);
   }
 
   Future<void> _onSendMessage(
-      SendMessage event, Emitter<SendMessageState> emit) async {
+      SendTextMessage event, Emitter<SendMessageState> emit) async {
 
     emit(SendMessageInProgress());
     final failureOrUserStatus = await msgUseCase.sendMessage(event.msg);
 
     emit(failureOrUserStatus.fold(
       (failure) => _handleFailure(failure),
-      (data) => SendMessageSuccess(data),
+      (data) => SendMessageSuccess(),
     ));
   }
 

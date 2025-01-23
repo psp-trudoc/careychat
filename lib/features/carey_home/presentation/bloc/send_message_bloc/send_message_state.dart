@@ -6,11 +6,7 @@ final class SendMessageInitial extends SendMessageState {}
 
 final class SendMessageInProgress extends SendMessageState {}
 
-final class SendMessageSuccess extends SendMessageState {
-  final ChatMessage msg;
-
-  SendMessageSuccess(this.msg);
-}
+final class SendMessageSuccess extends SendMessageState {}
 
 final class SendMessageFailure extends SendMessageState {
   final String error;

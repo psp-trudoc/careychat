@@ -60,7 +60,7 @@ class ChatConnectRepositoryImp extends ChatConnectRepository {
   }
 
   @override
-  Future<Either<Failure, ChatMessage>> sendMessage(ChatMessage message) async {
+  Future<Either<Failure, bool>> sendMessage(String message) async {
     try {
       final metaData = await remoteDataSource.sendMessage(message);
       return Right(metaData);
@@ -104,6 +104,9 @@ class ChatConnectRepositoryImp extends ChatConnectRepository {
         ));
       }
     }
+
+    msgArray.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+
     return msgArray;
   }
 }

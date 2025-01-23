@@ -1,6 +1,5 @@
 import 'dart:ffi';
 
-import 'package:carey/features/carey_home/domain/entities/chat_message.dart';
 import 'package:carey/features/carey_home/domain/entities/chat_register_user.dart';
 import 'package:carey/core/errors/failure.dart';
 import 'package:carey/features/carey_home/domain/entities/conversation_meta_data.dart';
@@ -15,7 +14,7 @@ abstract class ChatConnectRepository {
 
   Future<Either<Failure, ConversationMetaData>> getConversationMetaData();
 
-  Future<Either<Failure, ChatMessage>> sendMessage(ChatMessage message);
+  Future<Either<Failure, bool>> sendMessage(String message);
 
   Future<Either<Failure, List<types.Message>>> getLatestMessages(
       String conversationId, String type);

@@ -2,8 +2,8 @@ part of 'index.dart';
 
 sealed class SendMessageEvent {}
 
-class SendMessage extends SendMessageEvent {
-  final ChatMessage msg;
+class SendTextMessage extends SendMessageEvent {
+  final String msg;
 
-  SendMessage({required this.msg});
+  SendTextMessage({required this.msg});
 }

@@ -65,6 +65,7 @@ class AppColor {
   //* Grey
   final Color grey = const Color(0xFF8c8c8c); // 500 // "#8c8c8c"
   final Color grey100 = const Color(0xFFf2f2f2); // "#f2f2f2"
+  final Color grey120 = const Color(0xFFF4F4F4); // "#F4F4F4"
   final Color grey150 = const Color(0xFFececec); // "#ececec"
   final Color grey200 = const Color(0xFFd9d9d9); // "#d9d9d9"
   final Color grey300 = const Color(0xFFbfbfbf); // "#bfbfbf"
