@@ -1,5 +1,6 @@
 import 'package:carey/app_provider_scope.dart';
 import 'package:carey/core/constants/config.dart';
+import 'package:carey/core/extensions/build_context.dart';
 import 'package:carey/core/network/mqtt_service.dart';
 import 'package:carey/core/theme/app_colors.dart';
 import 'package:carey/core/utils/app_utils.dart';
@@ -36,9 +37,9 @@ class CareyHomePageState extends State<CareyHomePage> {
     super.initState();
     //  context.read<ChatConnectBloc>().add(GetMetaDataEvent());
 
-      MQTTService().connectChat();
+    MQTTService().connectChat();
 
-      loadHistory();
+    loadHistory();
   }
 
   loadHistory() {
@@ -120,7 +121,6 @@ class CareyHomePageState extends State<CareyHomePage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: const CareyAppBar(
@@ -167,9 +167,31 @@ class CareyHomePageState extends State<CareyHomePage> {
               padding: const EdgeInsets.only(left: defaultPadding),
               child: TextField(
                 controller: _messageController,
+
                 decoration: const InputDecoration(
                   hintText: "Type a message...",
-                  border: InputBorder.none,
+                  hintStyle: TextStyle(color: Colors.blueGrey),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        width: 0,
+                        color: Colors.transparent), // Transparent border
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        width: 0,
+                        color: Colors.transparent), // Transparent when selected
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        width: 0,
+                        color:
+                            Colors.transparent), // Transparent for error state
+                  ),
+                  disabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        width: 0,
+                        color: Colors.transparent), // Transparent when disabled
+                  ),
                 ),
               ),
             ),
