@@ -12,11 +12,13 @@ import 'package:carey/features/carey_home/domain/usecase/chat_register_use_case.
 import 'package:carey/features/carey_home/presentation/bloc/get_messages_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/index.dart';
+import 'package:carey/features/carey_home/presentation/bloc/upload_file_bloc/index.dart';
 import 'package:carey/flavor/flavors.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatManager {
   static final ChatManager _instance = ChatManager._internal();
@@ -26,12 +28,10 @@ class ChatManager {
   ChatManager._internal();
 
   bool _isInitialized = false;
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
 
-  // Declare BLoCs
-  late ChatConnectBloc chatConnectBloc;
-  late SendMessageBloc sendMessageBloc;
-  late GetMessagesBloc getMessagesBloc;
-
+  BuildContext? get moduleContext => scaffoldMessengerKey.currentContext;
 
   Future<void> initialize() async {
     if (_isInitialized) return;
@@ -41,11 +41,19 @@ class ChatManager {
     // Initialize dependencies
     await setupInjections();
 
-    chatConnectBloc = getIt<ChatConnectBloc>();
-    sendMessageBloc = getIt<SendMessageBloc>();
-    getMessagesBloc = getIt<GetMessagesBloc>();
-
     _isInitialized = true;
+  }
+
+  attachmentSelected(String fileName, String path) {
+    print("media callback received");
+
+    final chatContext = moduleContext;
+
+    if (chatContext != null) {
+      chatContext
+          .read<UploadFileBloc>()
+          .add(UploadMediaFileEvent(fileName: fileName, filePath: path));
+    }
   }
 
   Future<void> setupInjections() async {
@@ -85,10 +93,7 @@ class ChatManager {
   }
 
   Future<void> setupFlavorConfig() async {
-    print("setupFlavorConfig 1");
-    print(F.envName);
     await AppConfig.loadEnv(F.envName);
-    print("setupFlavorConfig 2");
   }
 
   Future<void> setupSharedPrefsInjections() async {
@@ -118,14 +123,15 @@ class ChatManager {
     getIt.registerFactory<ChatConnectBloc>(() => ChatConnectBloc(getIt()));
     getIt.registerFactory<SendMessageBloc>(() => SendMessageBloc(getIt()));
     getIt.registerFactory<GetMessagesBloc>(() => GetMessagesBloc(getIt()));
+    getIt.registerFactory<UploadFileBloc>(() => UploadFileBloc(getIt()));
   }
 
   Future<void> setupDataSource() async {
     getIt.registerLazySingleton<ChatConnectRepository>(
-          () => ChatConnectRepositoryImp(getIt()),
+      () => ChatConnectRepositoryImp(getIt()),
     );
     getIt.registerLazySingleton<ChatDataSource>(
-          () => ChatDataSourceImpl(getIt()),
+      () => ChatDataSourceImpl(getIt()),
     );
   }
 
@@ -136,5 +142,4 @@ class ChatManager {
     // timeago.setLocaleMessages('ar', CustomMessages());
     // DateFormat.useNativeDigitsByDefaultFor("ar", false);
   }
-
 }

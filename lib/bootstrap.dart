@@ -146,21 +146,6 @@ class _MyAppState extends State<MainApp> with WidgetsBindingObserver {
             ),
             home: const CareyHomePage(),
           ),
-          // builder: (context, __) =>
-          //     BlocListener<ConnectionCubit, InternetState>(
-          //         listenWhen: (previous, current) => previous != current,
-          //         listener: (context, internet) =>
-          //             checkInternet(internet, context),
-          //         child: )
-          // PiPMaterialApp.router(
-          //   debugShowCheckedModeBanner: kDebugMode,
-          //   localizationsDelegates: context.localizationDelegates,
-          //   supportedLocales: context.supportedLocales,
-          //   locale: context.locale,
-          //   themeMode: ThemeMode.light,
-          //   theme: AppTheme.lightTheme,
-          //   darkTheme: AppTheme.darkTheme,
-          // )),
         ),
       ),
     );

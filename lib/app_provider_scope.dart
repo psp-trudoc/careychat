@@ -2,6 +2,7 @@ import 'package:carey/bootstrap.dart';
 import 'package:carey/features/carey_home/presentation/bloc/get_messages_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/index.dart';
+import 'package:carey/features/carey_home/presentation/bloc/upload_file_bloc/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,6 +23,9 @@ class CareyAppProviderScope extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => getIt<GetMessagesBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<UploadFileBloc>(),
         ),
       ],
       child: child,

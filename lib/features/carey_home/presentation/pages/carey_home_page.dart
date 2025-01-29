@@ -1,32 +1,27 @@
-import 'package:carey/app_provider_scope.dart';
-import 'package:carey/core/constants/config.dart';
-import 'package:carey/core/extensions/build_context.dart';
+import 'package:carey/chat_manager.dart';
 import 'package:carey/core/network/mqtt_service.dart';
-import 'package:carey/core/theme/app_colors.dart';
 import 'package:carey/core/utils/app_utils.dart';
 import 'package:carey/core/widgets/app_bar.dart';
-import 'package:carey/core/widgets/buttons/td_progress_button.dart';
-import 'package:carey/core/widgets/gap.dart';
 import 'package:carey/features/carey_home/presentation/bloc/get_messages_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/index.dart';
+import 'package:carey/features/carey_home/presentation/bloc/upload_file_bloc/index.dart';
+import 'package:carey/features/carey_home/presentation/widgets/carey_input_bar_widget.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 
 class CareyHomePage extends StatefulWidget {
-  const CareyHomePage({super.key});
+  const CareyHomePage({super.key, this.onAttachmentTap});
+
+  final GestureTapCallback? onAttachmentTap;
 
   @override
   CareyHomePageState createState() => CareyHomePageState();
 }
 
 class CareyHomePageState extends State<CareyHomePage> {
-  final TextEditingController _messageController = TextEditingController();
-
-  // final List<ChatMessage> _messages = [];
   List<types.Message> _messages = [];
-  bool isMessageSending = false;
 
   final _user = const types.User(
     id: 'U78853',
@@ -75,36 +70,15 @@ class CareyHomePageState extends State<CareyHomePage> {
     print("_handlePreviewDataFetched");
   }
 
-  _handleSendPressed(types.PartialText message) {
-    print("_handleSendPressed");
+  _handleSendPressed(types.PartialText message) {}
 
-    // final newMessage = types.TextMessage(
-    //   author: _user,
-    //   createdAt: DateTime.now().millisecondsSinceEpoch,
-    //   id: AppUtils.generateTrackId(),
-    //   text: message.text.trim(),
-    // );
-    //
-    // setState(() {
-    //   _messages.insert(0, newMessage);
-    // });
-    //
-    // context.read<SendMessageBloc>().add(
-    //       SendTextMessage(
-    //         msg: message.text.trim(),
-    //       ),
-    //     );
-  }
-
-  Future<void> _sendMessage() async {
-    print("_handleSendPressed");
-
-    if (_messageController.text.trim().isNotEmpty) {
+  sendMessage(String msg) {
+    if (msg.isNotEmpty) {
       final newMessage = types.TextMessage(
         author: _user,
         createdAt: DateTime.now().millisecondsSinceEpoch,
         id: AppUtils.generateTrackId(),
-        text: _messageController.text.trim(),
+        text: msg,
       );
 
       setState(() {
@@ -113,22 +87,22 @@ class CareyHomePageState extends State<CareyHomePage> {
 
       context.read<SendMessageBloc>().add(
             SendTextMessage(
-              msg: _messageController.text.trim(),
+              msg: msg,
             ),
           );
-
-      _messageController.clear();
     }
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: const CareyAppBar(
-        title: "Carey",
-      ),
-      body: BlocBuilder<GetMessagesBloc, GetMessagesState>(
-        builder: buildChat,
-      ));
+        key: ChatManager().scaffoldMessengerKey,
+        appBar: const CareyAppBar(
+          title: "Carey",
+        ),
+        body: BlocBuilder<GetMessagesBloc, GetMessagesState>(
+          builder: buildChat,
+        ),
+      );
 
   Widget buildChat(BuildContext context, GetMessagesState state) {
     if (state is GetMessagesInProgress) {
@@ -146,76 +120,40 @@ class CareyHomePageState extends State<CareyHomePage> {
         showUserAvatars: false,
         showUserNames: true,
         user: _user,
-        customBottomWidget: _buildMessageInput(),
+        customBottomWidget: buildBottomBar(),
       );
     } else {
       return const SizedBox.shrink();
     }
   }
 
-  Widget _buildMessageInput() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: AppColor().grey120,
-              ),
-              padding: const EdgeInsets.only(left: defaultPadding),
-              child: TextField(
-                controller: _messageController,
+  Widget buildBottomBar() {
+    return BlocListener<UploadFileBloc, UploadFileState>(
+      listenWhen: (context, state) {
+        return state is UploadFileStateSuccess;
+      },
+      listener: (context, state) {
+        print("listener called for new attachement");
 
-                decoration: const InputDecoration(
-                  hintText: "Type a message...",
-                  hintStyle: TextStyle(color: Colors.blueGrey),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        width: 0,
-                        color: Colors.transparent), // Transparent border
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        width: 0,
-                        color: Colors.transparent), // Transparent when selected
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        width: 0,
-                        color:
-                            Colors.transparent), // Transparent for error state
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        width: 0,
-                        color: Colors.transparent), // Transparent when disabled
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const Gap(
-            width: 30,
-          ),
-          BlocListener<SendMessageBloc, SendMessageState>(
-              listener: (context, state) {
-                setState(() {
-                  print("STATE: $state");
+        final newMessage = types.ImageMessage(
+          author: _user,
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          id: AppUtils.generateTrackId(),
+          uri:
+              'https://www.cnet.com/a/img/resize/624f2b5b354ebdb805d44eeb64f9401ffd4dc475/hub/2024/05/13/1acda696-e74d-4e7e-bfd6-eaf1ccb40ae8/ipad-pro-2024-5.jpg?auto=webp&fit=crop&height=1200&width=1200',
+          name: 'new message',
+          size: 1000,
+        );
 
-                  if (state is SendMessageInProgress) {
-                    isMessageSending = true;
-                  } else {
-                    isMessageSending = false;
-                  }
-                });
-              },
-              child: TdProgressButton(
-                onPressed: _sendMessage,
-                isLoading: isMessageSending,
-              )),
-        ],
+        setState(() {
+          _messages.insert(0, newMessage);
+        });
+      },
+      child: CareyInputBarWidget(
+        onSend: (String msg) {
+          sendMessage(msg);
+        },
+        onAttachmentTap: widget.onAttachmentTap,
       ),
     );
   }

@@ -6,13 +6,14 @@ class TdProgressButton extends StatefulWidget {
   final Future<void> Function() onPressed;
   final bool isLoading;
   final double size;
+  final IconData icon;
 
-  const TdProgressButton({
-    super.key,
-    required this.onPressed,
-    this.isLoading = false,
-    this.size = 60.0,
-  });
+  const TdProgressButton(
+      {super.key,
+      required this.onPressed,
+      this.isLoading = false,
+      this.size = 60.0,
+      required this.icon});
 
   @override
   TdProgressButtonState createState() => TdProgressButtonState();
@@ -45,8 +46,8 @@ class TdProgressButtonState extends State<TdProgressButton> {
                     width: 22,
                     child: buildButtonLoader(Colors.white)),
               )
-            : const Icon(
-                Icons.arrow_forward,
+            : Icon(
+                widget.icon,
                 color: Colors.white,
                 size: 30.0,
               ),
