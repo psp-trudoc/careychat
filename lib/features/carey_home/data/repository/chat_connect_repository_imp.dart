@@ -18,6 +18,8 @@ class ChatConnectRepositoryImp extends ChatConnectRepository {
   @override
   Future<Either<Failure, ChatRegisterUserModel>> registerUser(
       String userId, String name) async {
+
+
     try {
       final user = await remoteDataSource.registerUser(userId, name);
       return Right(user);

@@ -3,9 +3,10 @@ import 'package:carey/core/network/mqtt_service.dart';
 import 'package:carey/core/utils/app_utils.dart';
 import 'package:carey/core/widgets/app_bar.dart';
 import 'package:carey/features/carey_home/presentation/bloc/get_messages_bloc/index.dart';
+import 'package:carey/features/carey_home/presentation/bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/index.dart';
-import 'package:carey/features/carey_home/presentation/bloc/upload_file_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/widgets/carey_input_bar_widget.dart';
+import 'package:carey/features/upload_rx/presentation/bloc/bloc.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +31,12 @@ class CareyHomePageState extends State<CareyHomePage> {
   @override
   void initState() {
     super.initState();
-    //  context.read<ChatConnectBloc>().add(GetMetaDataEvent());
+
+    context
+        .read<ChatConnectBloc>()
+        .add(CreateUserEvent(userId: "abv", name: "name", hcName: "hcName"));
+
+    // context.read<ChatConnectBloc>().add(GetMetaDataEvent());
 
     MQTTService().connectChat();
 
@@ -128,9 +134,9 @@ class CareyHomePageState extends State<CareyHomePage> {
   }
 
   Widget buildBottomBar() {
-    return BlocListener<UploadFileBloc, UploadFileState>(
+    return BlocListener<UploadRxBloc, UploadRxState>(
       listenWhen: (context, state) {
-        return state is UploadFileStateSuccess;
+        return state is UploadRxSuccess;
       },
       listener: (context, state) {
         print("listener called for new attachement");

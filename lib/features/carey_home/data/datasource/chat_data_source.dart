@@ -36,6 +36,7 @@ class ChatDataSourceImpl implements ChatDataSource {
       "hc_name": "kiran",
       "type": "ios",
     };
+    print("register user");
 
     try {
       final response = await _api.postJson(AppRoutes.registerDevice, jsonData);

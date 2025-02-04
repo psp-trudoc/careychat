@@ -12,13 +12,12 @@ import 'package:carey/features/carey_home/domain/usecase/chat_register_use_case.
 import 'package:carey/features/carey_home/presentation/bloc/get_messages_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/index.dart';
-import 'package:carey/features/carey_home/presentation/bloc/upload_file_bloc/index.dart';
+import 'package:carey/features/upload_rx/presentation/bloc/bloc.dart';
 import 'package:carey/flavor/flavors.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatManager {
   static final ChatManager _instance = ChatManager._internal();
@@ -44,15 +43,14 @@ class ChatManager {
     _isInitialized = true;
   }
 
-  attachmentSelected(String fileName, String path) {
+  attachmentSelected(List<FileAttachmentModel> files) {
     print("media callback received");
 
     final chatContext = moduleContext;
 
     if (chatContext != null) {
-      chatContext
-          .read<UploadFileBloc>()
-          .add(UploadMediaFileEvent(fileName: fileName, filePath: path));
+      // chatContext.read<UploadRxBloc>().add(UploadMediaFileEvent(
+      //     fileName: files.first.path, filePath: files.first.name));
     }
   }
 
@@ -123,7 +121,7 @@ class ChatManager {
     getIt.registerFactory<ChatConnectBloc>(() => ChatConnectBloc(getIt()));
     getIt.registerFactory<SendMessageBloc>(() => SendMessageBloc(getIt()));
     getIt.registerFactory<GetMessagesBloc>(() => GetMessagesBloc(getIt()));
-    getIt.registerFactory<UploadFileBloc>(() => UploadFileBloc(getIt()));
+    getIt.registerFactory<UploadRxBloc>(() => UploadRxBloc(getIt()));
   }
 
   Future<void> setupDataSource() async {
@@ -142,4 +140,18 @@ class ChatManager {
     // timeago.setLocaleMessages('ar', CustomMessages());
     // DateFormat.useNativeDigitsByDefaultFor("ar", false);
   }
+}
+
+class FileAttachmentModel {
+  String name;
+  String path;
+  String? link;
+  bool isUploaded;
+
+  FileAttachmentModel({
+    required this.name,
+    required this.path,
+    this.link,
+    this.isUploaded = true,
+  });
 }
