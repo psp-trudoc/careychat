@@ -18,6 +18,10 @@ import 'package:carey/features/carey_home/presentation/bloc/get_messages_bloc/in
 import 'package:carey/features/carey_home/presentation/bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/pages/carey_home_page.dart';
+import 'package:carey/features/upload_rx/data/datasources/upload_rx_remote_data_source.dart';
+import 'package:carey/features/upload_rx/data/repositories/upload_rx_repository_impl.dart';
+import 'package:carey/features/upload_rx/domain/repositories/upload_rx_repository.dart';
+import 'package:carey/features/upload_rx/domain/usecases/upload_rx_usecase.dart';
 import 'package:carey/features/upload_rx/presentation/bloc/bloc.dart';
 import 'package:carey/flavor/flavors.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -45,7 +49,7 @@ Future<void> setupScreenSettings() async {
 
 Future<void> setupInjections() async {
   print("setupInjections");
-  initializeDateFormatting();
+  await initializeDateFormatting();
   // await setupFlavorConfig();
   // Bloc.observer = const AppBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
@@ -101,6 +105,7 @@ Future<void> setupSystemSingletons() async {}
 Future<void> setupUseCases() async {
   getIt.registerLazySingleton(() => ChatRegisterUserUseCase(getIt()));
   getIt.registerLazySingleton(() => ChatMessageUseCase(getIt()));
+  getIt.registerLazySingleton(() => CareyUploadRxUseCase(getIt()));
 }
 
 Future<void> setupBlocs() async {
@@ -114,8 +119,14 @@ Future<void> setupDataSource() async {
   getIt.registerLazySingleton<ChatConnectRepository>(
     () => ChatConnectRepositoryImp(getIt()),
   );
+  getIt.registerLazySingleton<CareyUploadRxRepository>(
+    () => UploadRxRepositoryImpl(getIt()),
+  );
   getIt.registerLazySingleton<ChatDataSource>(
     () => ChatDataSourceImpl(getIt()),
+  );
+  getIt.registerLazySingleton<CareyUploadRxDataSource>(
+    () => CareyUploadRxDataSourceImpl(getIt()),
   );
 }
 

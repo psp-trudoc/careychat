@@ -141,12 +141,12 @@ class CareyHomePageState extends State<CareyHomePage> {
   Widget buildBottomBar() {
     return Stack(
       children: [
-        // CareyInputBarWidget(
-        //   onSend: (String msg) {
-        //     sendMessage(msg);
-        //   },
-        //   onAttachmentTap: widget.onAttachmentTap,
-        // ),
+        CareyInputBarWidget(
+          onSend: (String msg) {
+            sendMessage(msg);
+          },
+          onAttachmentTap: widget.onAttachmentTap,
+        ),
         BlocListener<CareyUploadRxBloc, CareyUploadRxState>(
           listener: (context, state) {
             if (state is UploadRxSuccess) {
@@ -171,14 +171,9 @@ class CareyHomePageState extends State<CareyHomePage> {
                 _messages.insert(0, newMessage);
               });
             }
-          }
-
-          ,
-          child: CareyInputBarWidget(
-            onSend: (String msg) {
-              sendMessage(msg);
-            },
-            onAttachmentTap: widget.onAttachmentTap,
+          },
+          child: const SizedBox(
+            height: 1,
           ),
 
         ),
