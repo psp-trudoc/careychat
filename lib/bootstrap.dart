@@ -28,6 +28,7 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'core/config/app_config.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 final getIt = GetIt.instance;
 
@@ -43,6 +44,7 @@ Future<void> setupScreenSettings() async {
 
 Future<void> setupInjections() async {
   print("setupInjections");
+  initializeDateFormatting();
   // await setupFlavorConfig();
   // Bloc.observer = const AppBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();

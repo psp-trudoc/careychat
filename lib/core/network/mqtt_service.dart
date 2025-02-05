@@ -1,16 +1,19 @@
 import 'dart:io';
+import 'dart:typed_data';
 
-import 'package:carey/core/constants/amplifyconfiguration.dart';
+import 'package:flutter/services.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
 
 
 class MQTTService {
   MqttServerClient? client;
   final String mqttEndpoint = "am8hbq0e8x6ij-ats.iot.ap-south-1.amazonaws.com";
   final int mqttPort = 8883;
-  final String clientId = "YourClientId";
+  final String clientId = "satpal-test";
+  //TODO change clientId to something like:
+  // mqttClientId = "$userId-$deviceId"
+
   final String mqttTopic = "/v3/dev/user/U78853";
   final String willMessage = "your-will-message";
 
@@ -27,10 +30,24 @@ class MQTTService {
       client!.keepAlivePeriod = 10;
       client!.logging(on: true);
 
-      // Configure TLS
-      final SecurityContext context = SecurityContext.defaultContext;
-      context.setTrustedCertificates("path/to/root-CA.pem"); // Path to AWS root CA
-      client!.securityContext = context;
+      final SecurityContext securityContext = SecurityContext.defaultContext;
+
+      try {
+        ByteData rootCA = await rootBundle.load('assets/aws/AmazonRootCA1.pem');
+        ByteData deviceCert = await rootBundle.load('assets/aws/aws-iot-certificate.pem.crt');
+        ByteData privateKey = await rootBundle.load('assets/aws/aws-iot-private.pem.key');
+
+        securityContext.setTrustedCertificatesBytes(rootCA.buffer.asUint8List());
+        securityContext.useCertificateChainBytes(deviceCert.buffer.asUint8List());
+        securityContext.usePrivateKeyBytes(privateKey.buffer.asUint8List());
+
+        client?.securityContext = securityContext;
+        print("Security context set successfully.");
+
+      } catch (e) {
+        print("Error loading certificates: $e");
+        return;
+      }
 
       // Set LWT and connection message
       client!.setProtocolV311();
@@ -39,6 +56,10 @@ class MQTTService {
           .withWillTopic(mqttTopic)
           .withWillMessage(willMessage)
           .startClean();
+
+      client!.onConnected = () {
+        subscribe(mqttTopic);
+      };
 
       // Connect to MQTT broker
       await client!.connect();
