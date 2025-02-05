@@ -31,11 +31,6 @@ class CareyUploadRxDataSourceImpl implements CareyUploadRxDataSource {
     String serviceType,
     String uploadType,
   ) async {
-
-
-    print("file uploading....");
-
-
     var formData = FormData();
     for (var file in files) {
       if (file != null && file.isUploaded == false) {
@@ -50,6 +45,7 @@ class CareyUploadRxDataSourceImpl implements CareyUploadRxDataSource {
         );
       }
     }
+
     if (formData.files.isEmpty) {
       return UploadRxModel.fromJson({"files": []});
     }
@@ -66,25 +62,17 @@ class CareyUploadRxDataSourceImpl implements CareyUploadRxDataSource {
       ),
     );
 
-
-    print(formData);
-
     try {
       final response = await _api.postFormData(
         AppRoutes.uploadFile,
         formData,
         onSendProgress: (int send, int recieve) {
-
-          print(recieve);
-
           if (onSendProgress != null) {
             onSendProgress(((send / recieve) * 100));
           }
         },
         cancelToken: cancelToken,
       );
-
-      print(response.data);
 
       return UploadRxModel.fromJson(response.data);
     } on DioException catch (e) {

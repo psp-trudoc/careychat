@@ -8,8 +8,8 @@ class UploadFileSubmit extends CareyUploadRxEvent {
   final String uploadModuleServiceType;
   UploadFileSubmit(
     this.selectedFiles, {
-    this.uploadModuleDocumentType = "",
-    this.uploadModuleServiceType = "",
+    this.uploadModuleDocumentType = "lab_tests",
+    this.uploadModuleServiceType = "labs",
   });
 }
 

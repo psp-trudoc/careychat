@@ -23,7 +23,12 @@ abstract class CareyUploadRxState {
 
   List<FileAttachmentModel> get files =>
       uploadedFiles?.files
-          .map((e) => FileAttachmentModel(name: e.fileName, path: e.link))
+          .map((e) => FileAttachmentModel(
+                link: e.link,
+                name: e.fileName,
+                path: e.fileName,
+                isUploaded: e.status == "success" ? true : false,
+              ))
           .toList() ??
       [];
 }

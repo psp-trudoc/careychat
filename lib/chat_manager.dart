@@ -19,24 +19,16 @@ class ChatManager {
   Future<void> initialize() async {
     if (_isInitialized) return;
 
-    print("Initializing Chat Module...");
-
-    // Initialize dependencies
     await setupInjections();
 
     _isInitialized = true;
   }
 
   attachmentSelected(List<FileAttachmentModel> files) {
-    print("media callback received");
-
     final chatContext = moduleContext;
 
     if (chatContext != null) {
       chatContext.read<CareyUploadRxBloc>().add(UploadFileSubmit(files));
-
-      // chatContext.read<UploadRxBloc>().add(UploadMediaFileEvent(
-      //     fileName: files.first.path, filePath: files.first.name));
     }
   }
 }
@@ -44,13 +36,13 @@ class ChatManager {
 class FileAttachmentModel {
   String name;
   String path;
-  String? link;
+  String link;
   bool isUploaded;
 
   FileAttachmentModel({
     required this.name,
     required this.path,
-    this.link,
-    this.isUploaded = true,
+    this.link = "",
+    this.isUploaded = false,
   });
 }

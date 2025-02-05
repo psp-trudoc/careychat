@@ -44,8 +44,6 @@ class CareyHomePageState extends State<CareyHomePage> {
   }
 
   loadHistory() {
-    print("loadHistory");
-
     context.read<GetMessagesBloc>().add(GetLatestMessagesEvent(
         conversationId: "61436", type: "latestWithConversationId"));
   }
@@ -57,9 +55,7 @@ class CareyHomePageState extends State<CareyHomePage> {
 
     final newMessage = types.TextMessage(
       author: hc,
-      createdAt: DateTime
-          .now()
-          .millisecondsSinceEpoch,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
       id: AppUtils.generateTrackId(),
       text: "Halo mike check",
     );
@@ -73,8 +69,8 @@ class CareyHomePageState extends State<CareyHomePage> {
     print("_handleMessageTap");
   }
 
-  _handlePreviewDataFetched(types.TextMessage message,
-      types.PreviewData previewData) {
+  _handlePreviewDataFetched(
+      types.TextMessage message, types.PreviewData previewData) {
     print("_handlePreviewDataFetched");
   }
 
@@ -84,9 +80,7 @@ class CareyHomePageState extends State<CareyHomePage> {
     if (msg.isNotEmpty) {
       final newMessage = types.TextMessage(
         author: _user,
-        createdAt: DateTime
-            .now()
-            .millisecondsSinceEpoch,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
         id: AppUtils.generateTrackId(),
         text: msg,
       );
@@ -96,16 +90,15 @@ class CareyHomePageState extends State<CareyHomePage> {
       });
 
       context.read<SendMessageBloc>().add(
-        SendTextMessage(
-          msg: msg,
-        ),
-      );
+            SendTextMessage(
+              msg: msg,
+            ),
+          );
     }
   }
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(
+  Widget build(BuildContext context) => Scaffold(
         key: ChatManager().scaffoldMessengerKey,
         appBar: const CareyAppBar(
           title: "Carey",
@@ -116,14 +109,14 @@ class CareyHomePageState extends State<CareyHomePage> {
       );
 
   Widget buildChat(BuildContext context, GetMessagesState state) {
-    // if (state is GetMessagesInProgress) {
-    //   return const Center(
-    //     child: CircularProgressIndicator.adaptive(),
-    //   );
-    // } else if (state is GetMessagesSuccess) {
-    //   _messages = state.messages;
+    if (state is GetMessagesInProgress) {
+      return const Center(
+        child: CircularProgressIndicator.adaptive(),
+      );
+    } else if (state is GetMessagesSuccess) {
+      _messages = state.messages;
 
-      return Chat(
+    return Chat(
         messages: _messages,
         onAttachmentPressed: _handleAttachmentPressed,
         onPreviewDataFetched: _handlePreviewDataFetched,
@@ -131,11 +124,10 @@ class CareyHomePageState extends State<CareyHomePage> {
         showUserAvatars: false,
         showUserNames: true,
         user: _user,
-        customBottomWidget: buildBottomBar()
-      );
-    // } else {
-    //   return const SizedBox.shrink();
-    // }
+        customBottomWidget: buildBottomBar());
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 
   Widget buildBottomBar() {
@@ -154,28 +146,25 @@ class CareyHomePageState extends State<CareyHomePage> {
               print(state.files.first.link);
               print(state.files);
 
+              for (var file in state.files) {
+                final newMessage = types.ImageMessage(
+                  author: _user,
+                  createdAt: DateTime.now().millisecondsSinceEpoch,
+                  id: AppUtils.generateTrackId(),
+                  uri: file.link,
+                  name: 'new message',
+                  size: 1000,
+                );
 
-              final newMessage = types.ImageMessage(
-                author: _user,
-                createdAt: DateTime
-                    .now()
-                    .millisecondsSinceEpoch,
-                id: AppUtils.generateTrackId(),
-                uri:
-                'https://www.cnet.com/a/img/resize/624f2b5b354ebdb805d44eeb64f9401ffd4dc475/hub/2024/05/13/1acda696-e74d-4e7e-bfd6-eaf1ccb40ae8/ipad-pro-2024-5.jpg?auto=webp&fit=crop&height=1200&width=1200',
-                name: 'new message',
-                size: 1000,
-              );
-
-              setState(() {
-                _messages.insert(0, newMessage);
-              });
+                setState(() {
+                  _messages.insert(0, newMessage);
+                });
+              }
             }
           },
           child: const SizedBox(
             height: 1,
           ),
-
         ),
       ],
     );

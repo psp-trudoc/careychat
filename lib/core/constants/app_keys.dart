@@ -9,6 +9,11 @@ abstract class AppKeys {
   static const String accessToken = "x-access-token";
   static const String apiChecksum = "x-api-checksum";
   static const String idToken = "x-id-token";
-
-
+  static const String appName = "appname";
+  static const String apiAppFlavor = "appflavor";
+  static const String appVersion = "appVersion";
+  static const String language = "language";
+  static const String xSource = "X-Source";
+  static const String xSourceValue = "MobileApp";
+  static const String appType = "app-type";
 }

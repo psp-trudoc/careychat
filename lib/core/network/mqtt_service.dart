@@ -1,17 +1,17 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:carey/core/constants/image_assets.dart';
+import 'package:carey/core/constants/aws_constants.dart';
 import 'package:flutter/services.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-
 
 class MQTTService {
   MqttServerClient? client;
   final String mqttEndpoint = "am8hbq0e8x6ij-ats.iot.ap-south-1.amazonaws.com";
   final int mqttPort = 8883;
   final String clientId = "satpal-test";
+
   //TODO change clientId to something like:
   // mqttClientId = "$userId-$deviceId"
 
@@ -19,7 +19,8 @@ class MQTTService {
   final String willMessage = "your-will-message";
 
   Future<void> connectChat() async {
-    if (client != null && client!.connectionStatus!.state == MqttConnectionState.connected) {
+    if (client != null &&
+        client!.connectionStatus!.state == MqttConnectionState.connected) {
       print("Already connected");
       return;
     }
@@ -34,18 +35,18 @@ class MQTTService {
       final SecurityContext securityContext = SecurityContext.defaultContext;
 
       try {
+        ByteData rootCA = await rootBundle.load(awsCA);
+        ByteData deviceCert = await rootBundle.load(awsIotCertificate);
+        ByteData privateKey = await rootBundle.load(awsPrivateKey);
 
-        ByteData rootCA = await rootBundle.load("packages/carey/assets/aws/AmazonRootCA1.pem");
-        ByteData deviceCert = await rootBundle.load("packages/carey/assets/aws/aws-iot-certificate.pem.crt");
-        ByteData privateKey = await rootBundle.load("packages/carey/assets/aws/aws-iot-private.pem.key");
-
-        securityContext.setTrustedCertificatesBytes(rootCA.buffer.asUint8List());
-        securityContext.useCertificateChainBytes(deviceCert.buffer.asUint8List());
+        securityContext
+            .setTrustedCertificatesBytes(rootCA.buffer.asUint8List());
+        securityContext
+            .useCertificateChainBytes(deviceCert.buffer.asUint8List());
         securityContext.usePrivateKeyBytes(privateKey.buffer.asUint8List());
 
         client?.securityContext = securityContext;
         print("Security context set successfully.");
-
       } catch (e) {
         print("Error loading certificates: $e");
         return;
@@ -71,9 +72,9 @@ class MQTTService {
     }
   }
 
-
   Future<void> subscribe(String topic) async {
-    if (client == null || client!.connectionStatus!.state != MqttConnectionState.connected) {
+    if (client == null ||
+        client!.connectionStatus!.state != MqttConnectionState.connected) {
       print("Client not connected. Call connectChat() first.");
       return;
     }
@@ -82,8 +83,10 @@ class MQTTService {
     print("Subscribed to $topic");
 
     client!.updates!.listen((List<MqttReceivedMessage<MqttMessage>> events) {
-      final MqttPublishMessage message = events[0].payload as MqttPublishMessage;
-      final payload = MqttPublishPayload.bytesToStringAsString(message.payload.message);
+      final MqttPublishMessage message =
+          events[0].payload as MqttPublishMessage;
+      final payload =
+          MqttPublishPayload.bytesToStringAsString(message.payload.message);
       print("Received message: $payload from topic: ${events[0].topic}");
     });
   }
