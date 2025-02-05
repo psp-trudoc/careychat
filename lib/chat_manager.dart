@@ -22,6 +22,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatManager {
@@ -65,6 +66,7 @@ class ChatManager {
     WidgetsFlutterBinding.ensureInitialized();
     EasyLocalization.ensureInitialized();
     await setupDateTime();
+    await initializeDateFormatting();
     await setupSharedPrefsInjections();
     // await setupHydratedStorage();
     await setupSystemSingletons();
