@@ -40,14 +40,14 @@ class _CareyInputBarWidgetState extends State<CareyInputBarWidget> {
       child: Row(
         children: [
           const Gap(
-            width: defaultPadding,
+            width: 8,
           ),
           TdButton(
             icon: attachment,
             onPressed: widget.onAttachmentTap,
           ),
           const Gap(
-            width: 30,
+            width: 8,
           ),
           Expanded(
             child: Container(
@@ -87,7 +87,7 @@ class _CareyInputBarWidgetState extends State<CareyInputBarWidget> {
             ),
           ),
           const Gap(
-            width: 10,
+            width: 8,
           ),
           BlocListener<SendMessageBloc, SendMessageState>(
               listener: (context, state) {

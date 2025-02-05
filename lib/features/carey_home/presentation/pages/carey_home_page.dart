@@ -116,26 +116,26 @@ class CareyHomePageState extends State<CareyHomePage> {
       );
 
   Widget buildChat(BuildContext context, GetMessagesState state) {
-    if (state is GetMessagesInProgress) {
-      return const Center(
-        child: CircularProgressIndicator.adaptive(),
-      );
-    } else if (state is GetMessagesSuccess) {
-      _messages = state.messages;
+    // if (state is GetMessagesInProgress) {
+    //   return const Center(
+    //     child: CircularProgressIndicator.adaptive(),
+    //   );
+    // } else if (state is GetMessagesSuccess) {
+    //   _messages = state.messages;
 
       return Chat(
-        messages: state.messages,
+        messages: _messages,
         onAttachmentPressed: _handleAttachmentPressed,
         onPreviewDataFetched: _handlePreviewDataFetched,
         onSendPressed: _handleSendPressed,
         showUserAvatars: false,
         showUserNames: true,
         user: _user,
-        customBottomWidget: buildBottomBar(),
+        customBottomWidget: buildBottomBar()
       );
-    } else {
-      return const SizedBox.shrink();
-    }
+    // } else {
+    //   return const SizedBox.shrink();
+    // }
   }
 
   Widget buildBottomBar() {

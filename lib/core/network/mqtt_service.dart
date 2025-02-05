@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:carey/core/constants/image_assets.dart';
 import 'package:flutter/services.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
@@ -33,9 +34,10 @@ class MQTTService {
       final SecurityContext securityContext = SecurityContext.defaultContext;
 
       try {
-        ByteData rootCA = await rootBundle.load('assets/aws/AmazonRootCA1.pem');
-        ByteData deviceCert = await rootBundle.load('assets/aws/aws-iot-certificate.pem.crt');
-        ByteData privateKey = await rootBundle.load('assets/aws/aws-iot-private.pem.key');
+
+        ByteData rootCA = await rootBundle.load("packages/carey/assets/aws/AmazonRootCA1.pem");
+        ByteData deviceCert = await rootBundle.load("packages/carey/assets/aws/aws-iot-certificate.pem.crt");
+        ByteData privateKey = await rootBundle.load("packages/carey/assets/aws/aws-iot-private.pem.key");
 
         securityContext.setTrustedCertificatesBytes(rootCA.buffer.asUint8List());
         securityContext.useCertificateChainBytes(deviceCert.buffer.asUint8List());
