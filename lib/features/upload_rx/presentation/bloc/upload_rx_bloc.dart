@@ -1,11 +1,11 @@
 part of 'bloc.dart';
 
-class UploadRxBloc extends Bloc<UploadRxEvent, UploadRxState> {
-  final UploadRxUseCase uploadRxUseCase;
+class CareyUploadRxBloc extends Bloc<CareyUploadRxEvent, CareyUploadRxState> {
+  final CareyUploadRxUseCase uploadRxUseCase;
   CancelToken? cancelToken;
 
-  UploadRxBloc(this.uploadRxUseCase) : super(UploadRxInitial()) {
-    on<UploadPrescriptionSubmit>(_onSubmitted);
+  CareyUploadRxBloc(this.uploadRxUseCase) : super(UploadRxInitial()) {
+    on<UploadFileSubmit>(_onSubmitted);
     on<UploadPrescriptionFailureRetry>(_onRetrySubmit);
   }
 
@@ -15,9 +15,9 @@ class UploadRxBloc extends Bloc<UploadRxEvent, UploadRxState> {
 
   Future<void> _onRetrySubmit(
     UploadPrescriptionFailureRetry event,
-    Emitter<UploadRxState> emit,
+    Emitter<CareyUploadRxState> emit,
   ) async {
-    add(UploadPrescriptionSubmit(event.selectedFiles));
+    add(UploadFileSubmit(event.selectedFiles));
   }
 
   List<UploadRxData> removeNonexistentAndExtras(
@@ -33,8 +33,8 @@ class UploadRxBloc extends Bloc<UploadRxEvent, UploadRxState> {
   }
 
   Future<void> _onSubmitted(
-    UploadPrescriptionSubmit event,
-    Emitter<UploadRxState> emit,
+    UploadFileSubmit event,
+    Emitter<CareyUploadRxState> emit,
   ) async {
     cancelToken = CancelToken();
 
@@ -74,7 +74,7 @@ class UploadRxBloc extends Bloc<UploadRxEvent, UploadRxState> {
     ));
   }
 
-  _handleSuccess(UploadRxState state, UploadRxModel data) {
+  _handleSuccess(CareyUploadRxState state, UploadRxModel data) {
     var previousUploadedFiles = state.uploadedFiles;
     data.files.addAll(previousUploadedFiles?.files ?? []);
     return UploadRxSuccess(uploadedFiles: data);

@@ -1,19 +1,19 @@
 part of 'bloc.dart';
 
-abstract class UploadRxEvent {}
+abstract class CareyUploadRxEvent {}
 
-class UploadPrescriptionSubmit extends UploadRxEvent {
+class UploadFileSubmit extends CareyUploadRxEvent {
   final List<FileAttachmentModel?> selectedFiles;
   final String uploadModuleDocumentType;
   final String uploadModuleServiceType;
-  UploadPrescriptionSubmit(
+  UploadFileSubmit(
     this.selectedFiles, {
     this.uploadModuleDocumentType = "",
     this.uploadModuleServiceType = "",
   });
 }
 
-class UploadPrescriptionFailureRetry extends UploadRxEvent {
+class UploadPrescriptionFailureRetry extends CareyUploadRxEvent {
   final List<FileAttachmentModel?> selectedFiles;
 
   UploadPrescriptionFailureRetry(this.selectedFiles);

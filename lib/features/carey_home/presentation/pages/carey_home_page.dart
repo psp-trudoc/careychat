@@ -57,7 +57,9 @@ class CareyHomePageState extends State<CareyHomePage> {
 
     final newMessage = types.TextMessage(
       author: hc,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
+      createdAt: DateTime
+          .now()
+          .millisecondsSinceEpoch,
       id: AppUtils.generateTrackId(),
       text: "Halo mike check",
     );
@@ -71,8 +73,8 @@ class CareyHomePageState extends State<CareyHomePage> {
     print("_handleMessageTap");
   }
 
-  _handlePreviewDataFetched(
-      types.TextMessage message, types.PreviewData previewData) {
+  _handlePreviewDataFetched(types.TextMessage message,
+      types.PreviewData previewData) {
     print("_handlePreviewDataFetched");
   }
 
@@ -82,7 +84,9 @@ class CareyHomePageState extends State<CareyHomePage> {
     if (msg.isNotEmpty) {
       final newMessage = types.TextMessage(
         author: _user,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
+        createdAt: DateTime
+            .now()
+            .millisecondsSinceEpoch,
         id: AppUtils.generateTrackId(),
         text: msg,
       );
@@ -92,15 +96,16 @@ class CareyHomePageState extends State<CareyHomePage> {
       });
 
       context.read<SendMessageBloc>().add(
-            SendTextMessage(
-              msg: msg,
-            ),
-          );
+        SendTextMessage(
+          msg: msg,
+        ),
+      );
     }
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) =>
+      Scaffold(
         key: ChatManager().scaffoldMessengerKey,
         appBar: const CareyAppBar(
           title: "Carey",
@@ -134,33 +139,50 @@ class CareyHomePageState extends State<CareyHomePage> {
   }
 
   Widget buildBottomBar() {
-    return BlocListener<UploadRxBloc, UploadRxState>(
-      listenWhen: (context, state) {
-        return state is UploadRxSuccess;
-      },
-      listener: (context, state) {
-        print("listener called for new attachement");
+    return Stack(
+      children: [
+        // CareyInputBarWidget(
+        //   onSend: (String msg) {
+        //     sendMessage(msg);
+        //   },
+        //   onAttachmentTap: widget.onAttachmentTap,
+        // ),
+        BlocListener<CareyUploadRxBloc, CareyUploadRxState>(
+          listener: (context, state) {
+            if (state is UploadRxSuccess) {
+              print("uploading completed !");
+              print(state.files.first.link);
+              print(state.files);
 
-        final newMessage = types.ImageMessage(
-          author: _user,
-          createdAt: DateTime.now().millisecondsSinceEpoch,
-          id: AppUtils.generateTrackId(),
-          uri:
-              'https://www.cnet.com/a/img/resize/624f2b5b354ebdb805d44eeb64f9401ffd4dc475/hub/2024/05/13/1acda696-e74d-4e7e-bfd6-eaf1ccb40ae8/ipad-pro-2024-5.jpg?auto=webp&fit=crop&height=1200&width=1200',
-          name: 'new message',
-          size: 1000,
-        );
 
-        setState(() {
-          _messages.insert(0, newMessage);
-        });
-      },
-      child: CareyInputBarWidget(
-        onSend: (String msg) {
-          sendMessage(msg);
-        },
-        onAttachmentTap: widget.onAttachmentTap,
-      ),
+              final newMessage = types.ImageMessage(
+                author: _user,
+                createdAt: DateTime
+                    .now()
+                    .millisecondsSinceEpoch,
+                id: AppUtils.generateTrackId(),
+                uri:
+                'https://www.cnet.com/a/img/resize/624f2b5b354ebdb805d44eeb64f9401ffd4dc475/hub/2024/05/13/1acda696-e74d-4e7e-bfd6-eaf1ccb40ae8/ipad-pro-2024-5.jpg?auto=webp&fit=crop&height=1200&width=1200',
+                name: 'new message',
+                size: 1000,
+              );
+
+              setState(() {
+                _messages.insert(0, newMessage);
+              });
+            }
+          }
+
+          ,
+          child: CareyInputBarWidget(
+            onSend: (String msg) {
+              sendMessage(msg);
+            },
+            onAttachmentTap: widget.onAttachmentTap,
+          ),
+
+        ),
+      ],
     );
   }
 }

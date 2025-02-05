@@ -8,7 +8,7 @@ import 'package:carey/core/network/api_client.dart';
 import 'package:dio/dio.dart';
 import 'package:carey/features/upload_rx/data/models/upload_rx_model.dart';
 
-abstract class UploadRxDataSource {
+abstract class CareyUploadRxDataSource {
   Future<UploadRxModel> uploadPrescriptions(
     List<FileAttachmentModel?> files,
     void Function(double progress)? onSendProgress,
@@ -18,10 +18,10 @@ abstract class UploadRxDataSource {
   );
 }
 
-class UploadRxDataSourceImpl implements UploadRxDataSource {
+class CareyUploadRxDataSourceImpl implements CareyUploadRxDataSource {
   final APIClient _api;
 
-  UploadRxDataSourceImpl(this._api);
+  CareyUploadRxDataSourceImpl(this._api);
 
   @override
   Future<UploadRxModel> uploadPrescriptions(
@@ -31,6 +31,11 @@ class UploadRxDataSourceImpl implements UploadRxDataSource {
     String serviceType,
     String uploadType,
   ) async {
+
+
+    print("file uploading....");
+
+
     var formData = FormData();
     for (var file in files) {
       if (file != null && file.isUploaded == false) {
@@ -61,17 +66,25 @@ class UploadRxDataSourceImpl implements UploadRxDataSource {
       ),
     );
 
+
+    print(formData);
+
     try {
       final response = await _api.postFormData(
         AppRoutes.uploadFile,
         formData,
         onSendProgress: (int send, int recieve) {
+
+          print(recieve);
+
           if (onSendProgress != null) {
             onSendProgress(((send / recieve) * 100));
           }
         },
         cancelToken: cancelToken,
       );
+
+      print(response.data);
 
       return UploadRxModel.fromJson(response.data);
     } on DioException catch (e) {

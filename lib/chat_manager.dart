@@ -12,12 +12,17 @@ import 'package:carey/features/carey_home/domain/usecase/chat_register_use_case.
 import 'package:carey/features/carey_home/presentation/bloc/get_messages_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/index.dart';
+import 'package:carey/features/upload_rx/data/datasources/upload_rx_remote_data_source.dart';
+import 'package:carey/features/upload_rx/data/repositories/upload_rx_repository_impl.dart';
+import 'package:carey/features/upload_rx/domain/repositories/upload_rx_repository.dart';
+import 'package:carey/features/upload_rx/domain/usecases/upload_rx_usecase.dart';
 import 'package:carey/features/upload_rx/presentation/bloc/bloc.dart';
 import 'package:carey/flavor/flavors.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatManager {
   static final ChatManager _instance = ChatManager._internal();
@@ -49,6 +54,8 @@ class ChatManager {
     final chatContext = moduleContext;
 
     if (chatContext != null) {
+      chatContext.read<CareyUploadRxBloc>().add(UploadFileSubmit(files));
+
       // chatContext.read<UploadRxBloc>().add(UploadMediaFileEvent(
       //     fileName: files.first.path, filePath: files.first.name));
     }
@@ -83,11 +90,6 @@ class ChatManager {
 
   Future<void> setupAppHelpers() async {
     // getIt.registerSingleton<AppInfo>(AppInfo());
-    // getIt.registerSingleton<LoginHelper>(LoginHelper(getIt()));
-    // getIt.registerSingleton<OmronBleHelper>(OmronBleHelper());
-    // getIt.registerSingleton<ForaBleHelper>(ForaBleHelper());
-    // getIt.registerSingleton<BleHelper>(BleHelper());
-    // getIt.registerSingleton<BluetoothUtil>(BluetoothUtil());
   }
 
   Future<void> setupFlavorConfig() async {
@@ -115,21 +117,28 @@ class ChatManager {
   Future<void> setupUseCases() async {
     getIt.registerLazySingleton(() => ChatRegisterUserUseCase(getIt()));
     getIt.registerLazySingleton(() => ChatMessageUseCase(getIt()));
+    getIt.registerLazySingleton(() => CareyUploadRxUseCase(getIt()));
   }
 
   Future<void> setupBlocs() async {
     getIt.registerFactory<ChatConnectBloc>(() => ChatConnectBloc(getIt()));
     getIt.registerFactory<SendMessageBloc>(() => SendMessageBloc(getIt()));
     getIt.registerFactory<GetMessagesBloc>(() => GetMessagesBloc(getIt()));
-    getIt.registerFactory<UploadRxBloc>(() => UploadRxBloc(getIt()));
+    getIt.registerFactory<CareyUploadRxBloc>(() => CareyUploadRxBloc(getIt()));
   }
 
   Future<void> setupDataSource() async {
     getIt.registerLazySingleton<ChatConnectRepository>(
       () => ChatConnectRepositoryImp(getIt()),
     );
+    getIt.registerLazySingleton<CareyUploadRxRepository>(
+      () => UploadRxRepositoryImpl(getIt()),
+    );
     getIt.registerLazySingleton<ChatDataSource>(
       () => ChatDataSourceImpl(getIt()),
+    );
+    getIt.registerLazySingleton<CareyUploadRxDataSource>(
+      () => CareyUploadRxDataSourceImpl(getIt()),
     );
   }
 

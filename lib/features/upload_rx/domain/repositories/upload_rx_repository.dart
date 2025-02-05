@@ -4,7 +4,7 @@ import 'package:carey/features/upload_rx/data/models/upload_rx_model.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 
-abstract class UploadRxRepository {
+abstract class CareyUploadRxRepository {
   Future<Either<Failure, UploadRxModel>> uploadPrescriptions(
     List<FileAttachmentModel?> files,
     void Function(double progress)? onSendProgress,

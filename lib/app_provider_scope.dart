@@ -25,7 +25,7 @@ class CareyAppProviderScope extends StatelessWidget {
           create: (_) => getIt<GetMessagesBloc>(),
         ),
         BlocProvider(
-          create: (_) => getIt<UploadRxBloc>(),
+          create: (_) => getIt<CareyUploadRxBloc>(),
         ),
       ],
       child: child,

@@ -1,11 +1,11 @@
 part of 'bloc.dart';
 
-abstract class UploadRxState {
+abstract class CareyUploadRxState {
   final UploadRxModel? uploadedFiles;
   final String uploadType;
   final String serviceType;
 
-  UploadRxState({
+  CareyUploadRxState({
     this.uploadedFiles,
     this.uploadType = "",
     this.serviceType = "",
@@ -28,9 +28,9 @@ abstract class UploadRxState {
       [];
 }
 
-class UploadRxInitial extends UploadRxState {}
+class UploadRxInitial extends CareyUploadRxState {}
 
-class UploadRxLoading extends UploadRxState {
+class UploadRxLoading extends CareyUploadRxState {
   final double progressLoading;
   final List<FileAttachmentModel?>? selectedFiles;
 
@@ -47,7 +47,7 @@ class UploadRxLoading extends UploadRxState {
   String get firstSelectedFileName => selectedFiles?.first?.name ?? "";
 }
 
-class UploadRxSuccess extends UploadRxState {
+class UploadRxSuccess extends CareyUploadRxState {
   UploadRxSuccess({
     super.uploadedFiles,
     super.uploadType,
@@ -55,7 +55,7 @@ class UploadRxSuccess extends UploadRxState {
   });
 }
 
-class UploadRxFailure extends UploadRxState {
+class UploadRxFailure extends CareyUploadRxState {
   final String error;
 
   final String? errorMessage;

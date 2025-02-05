@@ -5,10 +5,10 @@ import 'package:carey/features/upload_rx/domain/repositories/upload_rx_repositor
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 
-class UploadRxUseCase {
-  final UploadRxRepository repository;
+class CareyUploadRxUseCase {
+  final CareyUploadRxRepository repository;
 
-  UploadRxUseCase(this.repository);
+  CareyUploadRxUseCase(this.repository);
 
   Future<Either<Failure, UploadRxModel>> call(
     List<FileAttachmentModel?> files,

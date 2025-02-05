@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CareyInputBarWidget extends StatefulWidget {
-  const CareyInputBarWidget({super.key, required this.onSend, this.onAttachmentTap});
+  const CareyInputBarWidget(
+      {super.key, required this.onSend, this.onAttachmentTap});
 
   final void Function(String msg) onSend;
   final GestureTapCallback? onAttachmentTap;
@@ -38,12 +39,15 @@ class _CareyInputBarWidgetState extends State<CareyInputBarWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Row(
         children: [
+          const Gap(
+            width: defaultPadding,
+          ),
           TdButton(
             icon: attachment,
             onPressed: widget.onAttachmentTap,
           ),
           const Gap(
-            width: 10,
+            width: 30,
           ),
           Expanded(
             child: Container(

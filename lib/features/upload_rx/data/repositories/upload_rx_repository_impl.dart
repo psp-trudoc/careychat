@@ -7,8 +7,8 @@ import 'package:carey/features/upload_rx/domain/repositories/upload_rx_repositor
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 
-class UploadRxRepositoryImpl extends UploadRxRepository {
-  final UploadRxDataSource remoteDataSource;
+class UploadRxRepositoryImpl extends CareyUploadRxRepository {
+  final CareyUploadRxDataSource remoteDataSource;
 
   UploadRxRepositoryImpl(this.remoteDataSource);
 

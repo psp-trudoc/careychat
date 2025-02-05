@@ -18,6 +18,7 @@ import 'package:carey/features/carey_home/presentation/bloc/get_messages_bloc/in
 import 'package:carey/features/carey_home/presentation/bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/pages/carey_home_page.dart';
+import 'package:carey/features/upload_rx/presentation/bloc/bloc.dart';
 import 'package:carey/flavor/flavors.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -104,6 +105,7 @@ Future<void> setupBlocs() async {
   getIt.registerFactory<ChatConnectBloc>(() => ChatConnectBloc(getIt()));
   getIt.registerFactory<SendMessageBloc>(() => SendMessageBloc(getIt()));
   getIt.registerFactory<GetMessagesBloc>(() => GetMessagesBloc(getIt()));
+  getIt.registerFactory<CareyUploadRxBloc>(() => CareyUploadRxBloc(getIt()));
 }
 
 Future<void> setupDataSource() async {
