@@ -112,18 +112,35 @@ class CareyHomePageState extends State<CareyHomePage> {
     } else if (state is GetMessagesSuccess) {
       _messages = state.messages;
 
-      return Chat(
-          messages: _messages,
-          onAttachmentPressed: _handleAttachmentPressed,
-          onPreviewDataFetched: _handlePreviewDataFetched,
-          onSendPressed: _handleSendPressed,
-          showUserAvatars: false,
-          showUserNames: true,
-          user: _user,
-          customBottomWidget: buildBottomBar());
+      return buildChatUI();
+    } else if (state is ReceivedNewMessageState) {
+      final sender = types.User(id: state.message.sender);
+
+      final newMessage = types.TextMessage(
+        author: sender,
+        createdAt: state.message.timestamp,
+        id: state.message.trackId,
+        text: state.message.body ?? "",
+      );
+
+      _messages.insert(0, newMessage); // Add new message to the top
+
+      return buildChatUI();
     } else {
       return const SizedBox.shrink();
     }
+  }
+
+  Chat buildChatUI() {
+    return Chat(
+        messages: _messages,
+        onAttachmentPressed: _handleAttachmentPressed,
+        onPreviewDataFetched: _handlePreviewDataFetched,
+        onSendPressed: _handleSendPressed,
+        showUserAvatars: false,
+        showUserNames: true,
+        user: _user,
+        customBottomWidget: buildBottomBar());
   }
 
   Widget buildBottomBar() {
@@ -154,9 +171,8 @@ class CareyHomePageState extends State<CareyHomePage> {
               }
             }
           },
-          child: Container(
-            height: 10,
-            color: Colors.red,
+          child: const SizedBox(
+            height: 1,
           ),
         ),
       ],

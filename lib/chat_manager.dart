@@ -36,7 +36,9 @@ class ChatManager {
 
     MQTTService(
       onMessageReceived: (ChatMessage message) {
-        getIt<GetMessagesBloc>().add(ReceivedNewMessage(message: message));
+        moduleContext
+            ?.read<GetMessagesBloc>()
+            .add(ReceivedNewMessage(message: message));
       },
     ).connectChat();
 
