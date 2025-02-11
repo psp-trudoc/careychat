@@ -1,9 +1,7 @@
 import 'package:carey/chat_manager.dart';
-import 'package:carey/core/network/mqtt_service.dart';
 import 'package:carey/core/utils/app_utils.dart';
 import 'package:carey/core/widgets/app_bar.dart';
 import 'package:carey/features/carey_home/presentation/bloc/get_messages_bloc/index.dart';
-import 'package:carey/features/carey_home/presentation/bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/widgets/carey_input_bar_widget.dart';
 import 'package:carey/features/upload_rx/presentation/bloc/bloc.dart';
@@ -31,14 +29,6 @@ class CareyHomePageState extends State<CareyHomePage> {
   @override
   void initState() {
     super.initState();
-
-    context
-        .read<ChatConnectBloc>()
-        .add(CreateUserEvent(userId: "abv", name: "name", hcName: "hcName"));
-
-    // context.read<ChatConnectBloc>().add(GetMetaDataEvent());
-
-    MQTTService().connectChat();
 
     loadHistory();
   }
@@ -116,15 +106,15 @@ class CareyHomePageState extends State<CareyHomePage> {
     } else if (state is GetMessagesSuccess) {
       _messages = state.messages;
 
-    return Chat(
-        messages: _messages,
-        onAttachmentPressed: _handleAttachmentPressed,
-        onPreviewDataFetched: _handlePreviewDataFetched,
-        onSendPressed: _handleSendPressed,
-        showUserAvatars: false,
-        showUserNames: true,
-        user: _user,
-        customBottomWidget: buildBottomBar());
+      return Chat(
+          messages: _messages,
+          onAttachmentPressed: _handleAttachmentPressed,
+          onPreviewDataFetched: _handlePreviewDataFetched,
+          onSendPressed: _handleSendPressed,
+          showUserAvatars: false,
+          showUserNames: true,
+          user: _user,
+          customBottomWidget: buildBottomBar());
     } else {
       return const SizedBox.shrink();
     }

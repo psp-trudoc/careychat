@@ -6,6 +6,7 @@ abstract class AppKeys {
   static const String truDoc = "trudoc";
   static const String ksa = "ksa";
 
+  static const String token = "token";
   static const String accessToken = "x-access-token";
   static const String apiChecksum = "x-api-checksum";
   static const String idToken = "x-id-token";

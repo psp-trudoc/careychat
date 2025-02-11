@@ -29,17 +29,16 @@ class ChatDataSourceImpl implements ChatDataSource {
   ChatDataSourceImpl(this._api);
 
   @override
-  Future<ChatRegisterUserModel> registerUser(String userId, String name) async {
+  Future<ChatRegisterUserModel> registerUser(String name, String token) async {
     var jsonData = {
-      "user_object_id": "U78853",
-      "name": "psp google",
-      "hc_name": "kiran",
+      "name": name,
+      "role": "healthcoach",
       "type": "ios",
     };
     print("register user");
 
     try {
-      final response = await _api.postJson(AppRoutes.registerDevice, jsonData);
+      final response = await _api.postJson(AppRoutes.registerUser, jsonData);
 
       return ChatRegisterUserModel.fromJson(response.data);
     } on DioException catch (e) {

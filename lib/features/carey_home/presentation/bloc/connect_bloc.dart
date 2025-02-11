@@ -12,7 +12,7 @@ class ChatConnectBloc extends Bloc<ChatConnectEvent, ChatConnectState> {
       CreateUserEvent event, Emitter<ChatConnectState> emit) async {
     emit(ChatConnectInProgress());
     final failureOrUserStatus =
-        await registerUserUseCase.register(event.userId, event.name);
+        await registerUserUseCase.register(event.name, event.token);
 
     await failureOrUserStatus.fold(
       (failure) async {

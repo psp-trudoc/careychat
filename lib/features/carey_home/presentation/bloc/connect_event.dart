@@ -3,12 +3,10 @@ part of 'index.dart';
 sealed class ChatConnectEvent {}
 
 class CreateUserEvent extends ChatConnectEvent {
-  final String userId;
   final String name;
-  final String hcName;
+  final String token;
 
-  CreateUserEvent(
-      {required this.userId, required this.name, required this.hcName});
+  CreateUserEvent({required this.name, required this.token});
 }
 
 class GetMetaDataEvent extends ChatConnectEvent {}
