@@ -16,7 +16,7 @@ class ChatRegisterUserUseCase {
     return await chatRepository.registerUser(userId, name);
   }
 
-  Future<Either<Failure, Int64>> createConversation(String token) async {
+  Future<Either<Failure, String>> createConversation(String token) async {
     return await chatRepository.createConversation(token);
   }
 

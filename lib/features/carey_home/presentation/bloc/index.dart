@@ -1,6 +1,7 @@
-import 'dart:ffi';
-
+import 'package:carey/bootstrap.dart';
+import 'package:carey/core/constants/app_keys.dart';
 import 'package:carey/core/errors/failure.dart';
+import 'package:carey/core/utils/app_pref_service.dart';
 import 'package:carey/features/carey_home/domain/entities/conversation_meta_data.dart';
 import 'package:carey/features/carey_home/domain/usecase/chat_register_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

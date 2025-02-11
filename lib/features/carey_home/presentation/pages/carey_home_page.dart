@@ -30,7 +30,7 @@ class CareyHomePageState extends State<CareyHomePage> {
   void initState() {
     super.initState();
 
-    loadHistory();
+   loadHistory();
   }
 
   loadHistory() {

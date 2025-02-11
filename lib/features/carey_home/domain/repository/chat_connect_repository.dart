@@ -10,7 +10,7 @@ abstract class ChatConnectRepository {
   Future<Either<Failure, ChatRegisterUserModel>> registerUser(
       String userId, String name);
 
-  Future<Either<Failure, Int64>> createConversation(String token);
+  Future<Either<Failure, String>> createConversation(String token);
 
   Future<Either<Failure, ConversationMetaData>> getConversationMetaData();
 

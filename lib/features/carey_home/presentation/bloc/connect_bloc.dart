@@ -10,26 +10,36 @@ class ChatConnectBloc extends Bloc<ChatConnectEvent, ChatConnectState> {
 
   Future<void> _onRegisterUser(
       CreateUserEvent event, Emitter<ChatConnectState> emit) async {
+    final userToken = event.token;
+
     emit(ChatConnectInProgress());
     final failureOrUserStatus =
-        await registerUserUseCase.register(event.name, event.token);
+        await registerUserUseCase.register(event.name, userToken);
 
-    await failureOrUserStatus.fold(
-      (failure) async {
-        emit(_handleFailure(failure));
-      },
-      (userData) async {
-        // Step 2: Fetch token after user registration succeeds
-        final failureOrToken =
-            await registerUserUseCase.createConversation(userData.token ?? "");
+    final pref = getIt<AppPreferenceService>();
+    final conversationId = pref.getString(AppKeys.conversationId);
 
-        // Handle token fetch result
-        emit(failureOrToken.fold(
-          (failure) => _handleFailure(failure),
-          (token) => ChatConnectSuccess(token),
-        ));
-      },
-    );
+    if (conversationId.isNotEmpty) {
+
+      ChatConnectSuccess(conversationId);
+    } else {
+      await failureOrUserStatus.fold(
+        (failure) async {
+          emit(_handleFailure(failure));
+        },
+        (userData) async {
+          // Step 2: Fetch token after user registration succeeds
+          final failureOrConversationId =
+              await registerUserUseCase.createConversation(userToken);
+
+          // Handle token fetch result
+          emit(failureOrConversationId.fold(
+            (failure) => _handleFailure(failure),
+            (conId) => ChatConnectSuccess(conId),
+          ));
+        },
+      );
+    }
   }
 
   Future<void> _onGetConversationMetaData(

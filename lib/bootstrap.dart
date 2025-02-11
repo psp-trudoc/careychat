@@ -78,15 +78,11 @@ Future<void> setupAppHelpers() async {
 }
 
 Future<void> setupFlavorConfig() async {
-  print("setupFlavorConfig 1");
-  print(F.envName);
   await AppConfig.loadEnv(F.envName);
-  print("setupFlavorConfig 2");
 }
 
 Future<void> setupSharedPrefsInjections() async {
   getIt.registerFactory<AppPreferenceService>(() => AppPreferenceService());
-  print("setupSharedPrefsInjections");
 }
 
 Future<void> setupNetworking() async {

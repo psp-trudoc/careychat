@@ -17,4 +17,7 @@ abstract class AppKeys {
   static const String xSource = "X-Source";
   static const String xSourceValue = "MobileApp";
   static const String appType = "app-type";
+  static const String userInfo = "userInfo";
+  static const String conversationId = "conversationId";
+
 }

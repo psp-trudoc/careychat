@@ -19,4 +19,13 @@ class ChatRegisterUserModel {
       token: json['token'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'newUser': newUser,
+      'user_id': userId,
+      'message': message,
+      'token': token,
+    };
+  }
 }

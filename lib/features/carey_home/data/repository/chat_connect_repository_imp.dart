@@ -33,7 +33,7 @@ class ChatConnectRepositoryImp extends ChatConnectRepository {
   }
 
   @override
-  Future<Either<Failure, Int64>> createConversation(String token) async {
+  Future<Either<Failure, String>> createConversation(String token) async {
     try {
       final conversationId = await remoteDataSource.createConversation(token);
       return Right(conversationId);

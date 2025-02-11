@@ -7,9 +7,9 @@ final class ChatConnectInitial extends ChatConnectState {}
 final class ChatConnectInProgress extends ChatConnectState {}
 
 final class ChatConnectSuccess extends ChatConnectState {
-  final Int64 conversation;
+  final String conversationId;
 
-  ChatConnectSuccess(this.conversation);
+  ChatConnectSuccess(this.conversationId);
 }
 
 final class ChatConnectFailure extends ChatConnectState {

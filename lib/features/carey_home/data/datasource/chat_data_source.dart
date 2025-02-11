@@ -1,9 +1,11 @@
-import 'dart:ffi';
 import 'dart:io';
 
+import 'package:carey/bootstrap.dart';
+import 'package:carey/core/constants/app_keys.dart';
 import 'package:carey/core/constants/app_routes.dart';
 import 'package:carey/core/errors/exceptions.dart';
 import 'package:carey/core/network/api_client.dart';
+import 'package:carey/core/utils/app_pref_service.dart';
 import 'package:carey/core/utils/app_utils.dart';
 import 'package:carey/features/carey_home/data/model/chat_messages_model.dart';
 import 'package:carey/features/carey_home/domain/entities/chat_register_user.dart';
@@ -13,7 +15,7 @@ import 'package:dio/dio.dart';
 abstract class ChatDataSource {
   Future<ChatRegisterUserModel> registerUser(String userId, String name);
 
-  Future<Int64> createConversation(String token);
+  Future<String> createConversation(String token);
 
   Future<ConversationMetaData> getConversationMetaData();
 
@@ -25,6 +27,7 @@ abstract class ChatDataSource {
 
 class ChatDataSourceImpl implements ChatDataSource {
   final APIClient _api;
+  final prefs = getIt<AppPreferenceService>();
 
   ChatDataSourceImpl(this._api);
 
@@ -38,9 +41,14 @@ class ChatDataSourceImpl implements ChatDataSource {
     print("register user");
 
     try {
-      final response = await _api.postJson(AppRoutes.registerUser, jsonData);
+      final response = await _api
+          .postWithHeaders(AppRoutes.registerUser, jsonData, token: token);
 
-      return ChatRegisterUserModel.fromJson(response.data);
+      final userData = ChatRegisterUserModel.fromJson(response.data);
+
+      await prefs.saveJsonObject(AppKeys.userInfo, userData.toJson());
+
+      return userData;
     } on DioException catch (e) {
       if (e.response?.statusCode == HttpStatus.badRequest) {
         final errorData = e.response!.data;
@@ -53,16 +61,21 @@ class ChatDataSourceImpl implements ChatDataSource {
   }
 
   @override
-  Future<Int64> createConversation(String token) async {
+  Future<String> createConversation(String token) async {
     var jsonData = {
       "participants": ["U78853", "H4040"],
     };
 
     try {
-      final response =
-          await _api.postJson(AppRoutes.registerConversation, jsonData);
+      final response = await _api.postWithHeaders(
+          AppRoutes.registerConversation, jsonData,
+          token: token);
 
-      return response.data["conversationId"];
+      final conversationId = response.data["conversationId"].toString();
+
+      prefs.setString(AppKeys.conversationId, conversationId);
+
+      return conversationId;
     } on DioException catch (e) {
       if (e.response?.statusCode == HttpStatus.badRequest) {
         final errorData = e.response!.data;
