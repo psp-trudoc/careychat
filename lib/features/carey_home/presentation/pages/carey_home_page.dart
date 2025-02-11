@@ -30,7 +30,7 @@ class CareyHomePageState extends State<CareyHomePage> {
   void initState() {
     super.initState();
 
-   loadHistory();
+    loadHistory();
   }
 
   loadHistory() {
@@ -93,8 +93,14 @@ class CareyHomePageState extends State<CareyHomePage> {
         appBar: const CareyAppBar(
           title: "Carey",
         ),
-        body: BlocBuilder<GetMessagesBloc, GetMessagesState>(
+        body: BlocConsumer<GetMessagesBloc, GetMessagesState>(
           builder: buildChat,
+          listener: (BuildContext context, GetMessagesState state) {
+            print("new msg received 22");
+            print(state);
+
+            if (state is ReceivedNewMessageState) {}
+          },
         ),
       );
 
@@ -132,10 +138,6 @@ class CareyHomePageState extends State<CareyHomePage> {
         BlocListener<CareyUploadRxBloc, CareyUploadRxState>(
           listener: (context, state) {
             if (state is UploadRxSuccess) {
-              print("uploading completed !");
-              print(state.files.first.link);
-              print(state.files);
-
               for (var file in state.files) {
                 final newMessage = types.ImageMessage(
                   author: _user,
@@ -152,8 +154,9 @@ class CareyHomePageState extends State<CareyHomePage> {
               }
             }
           },
-          child: const SizedBox(
-            height: 1,
+          child: Container(
+            height: 10,
+            color: Colors.red,
           ),
         ),
       ],

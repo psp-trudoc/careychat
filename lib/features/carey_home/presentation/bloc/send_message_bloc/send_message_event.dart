@@ -7,3 +7,4 @@ class SendTextMessage extends SendMessageEvent {
 
   SendTextMessage({required this.msg});
 }
+

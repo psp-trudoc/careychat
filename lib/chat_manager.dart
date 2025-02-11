@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:carey/bootstrap.dart';
 import 'package:carey/core/constants/app_keys.dart';
 import 'package:carey/core/network/mqtt_service.dart';
+import 'package:carey/features/carey_home/domain/entities/chat_message.dart';
 import 'package:carey/features/carey_home/domain/entities/chat_register_user.dart';
+import 'package:carey/features/carey_home/presentation/bloc/get_messages_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/index.dart';
 import 'package:carey/features/upload_rx/presentation/bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,7 @@ class ChatManager {
 
   bool _isInitialized = false;
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-  GlobalKey<ScaffoldMessengerState>();
+      GlobalKey<ScaffoldMessengerState>();
 
   BuildContext? get moduleContext => scaffoldMessengerKey.currentContext;
 
@@ -32,9 +34,11 @@ class ChatManager {
 
     getIt<ChatConnectBloc>().add(CreateUserEvent(name: name, token: token));
 
-    // context.read<ChatConnectBloc>().add(GetMetaDataEvent());
-
-    MQTTService().connectChat();
+    MQTTService(
+      onMessageReceived: (ChatMessage message) {
+        getIt<GetMessagesBloc>().add(ReceivedNewMessage(message: message));
+      },
+    ).connectChat();
 
     _isInitialized = true;
   }

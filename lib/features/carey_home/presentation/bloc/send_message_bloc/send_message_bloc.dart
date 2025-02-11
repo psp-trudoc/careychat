@@ -9,7 +9,6 @@ class SendMessageBloc extends Bloc<SendMessageEvent, SendMessageState> {
 
   Future<void> _onSendMessage(
       SendTextMessage event, Emitter<SendMessageState> emit) async {
-
     emit(SendMessageInProgress());
     final failureOrUserStatus = await msgUseCase.sendMessage(event.msg);
 

@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:carey/core/constants/aws_constants.dart';
+import 'package:carey/features/carey_home/domain/entities/chat_message.dart';
 import 'package:flutter/services.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
@@ -11,6 +13,10 @@ class MQTTService {
   final String mqttEndpoint = "am8hbq0e8x6ij-ats.iot.ap-south-1.amazonaws.com";
   final int mqttPort = 8883;
   final String clientId = "satpal-test";
+
+  Function(ChatMessage message) onMessageReceived; // Callback for messages
+
+  MQTTService({required this.onMessageReceived});
 
   //TODO change clientId to something like:
   // mqttClientId = "$userId-$deviceId"
@@ -88,6 +94,14 @@ class MQTTService {
       final payload =
           MqttPublishPayload.bytesToStringAsString(message.payload.message);
       print("Received message: $payload from topic: ${events[0].topic}");
+
+      final Map<String, dynamic> jsonPayload = json.decode(payload);
+
+      if (jsonPayload["type"] == "conversation") {
+        final chatMessage = ChatMessage.fromJson(jsonPayload);
+
+        onMessageReceived(chatMessage);
+      }
     });
   }
 

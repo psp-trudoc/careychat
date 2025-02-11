@@ -5,6 +5,7 @@ class GetMessagesBloc extends Bloc<GetMessagesEvent, GetMessagesState> {
 
   GetMessagesBloc(this.chatUserUseCase) : super(GetMessagesInitial()) {
     on<GetLatestMessagesEvent>(_onGetLatestMessages);
+    on<ReceivedNewMessage>(_onNewMessage);
   }
 
   Future<void> _onGetLatestMessages(
@@ -17,6 +18,11 @@ class GetMessagesBloc extends Bloc<GetMessagesEvent, GetMessagesState> {
       (failure) => _handleFailure(failure),
       (data) => GetMessagesSuccess(data),
     ));
+  }
+
+  Future<void> _onNewMessage(
+      ReceivedNewMessage event, Emitter<GetMessagesState> emit) async {
+    emit(ReceivedNewMessageState(event.message));
   }
 
   _handleFailure(Failure f) {

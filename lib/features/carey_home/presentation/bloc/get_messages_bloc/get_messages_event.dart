@@ -8,3 +8,9 @@ class GetLatestMessagesEvent extends GetMessagesEvent {
 
   GetLatestMessagesEvent({required this.conversationId, required this.type});
 }
+
+class ReceivedNewMessage extends GetMessagesEvent {
+  final ChatMessage message;
+
+  ReceivedNewMessage({required this.message});
+}

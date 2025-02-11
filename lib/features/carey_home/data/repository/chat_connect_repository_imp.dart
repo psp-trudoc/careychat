@@ -18,8 +18,6 @@ class ChatConnectRepositoryImp extends ChatConnectRepository {
   @override
   Future<Either<Failure, ChatRegisterUserModel>> registerUser(
       String userId, String name) async {
-
-
     try {
       final user = await remoteDataSource.registerUser(userId, name);
       return Right(user);
@@ -96,14 +94,16 @@ class ChatConnectRepositoryImp extends ChatConnectRepository {
 
     if (messages.isNotEmpty) {
       for (ChatMessage msg in messages) {
-        msgArray.add(types.TextMessage(
-          author: types.User(
-            id: msg.sender,
+        msgArray.add(
+          types.TextMessage(
+            author: types.User(
+              id: msg.sender,
+            ),
+            createdAt: msg.timestamp,
+            id: msg.trackId,
+            text: msg.body ?? "",
           ),
-          createdAt: msg.timestamp,
-          id: msg.trackId,
-          text: msg.body ?? "",
-        ));
+        );
       }
     }
 

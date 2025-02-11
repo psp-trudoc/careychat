@@ -12,8 +12,20 @@ final class GetMessagesSuccess extends GetMessagesState {
   GetMessagesSuccess(this.messages);
 }
 
+final class GetNewMessageSuccess extends GetMessagesState {
+  final List<types.Message> messages;
+
+  GetNewMessageSuccess(this.messages);
+}
+
 final class GetMessagesFailure extends GetMessagesState {
   final String error;
 
   GetMessagesFailure(this.error);
+}
+
+final class ReceivedNewMessageState extends GetMessagesState {
+  final ChatMessage message;
+
+  ReceivedNewMessageState(this.message);
 }
