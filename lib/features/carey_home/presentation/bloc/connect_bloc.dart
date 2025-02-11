@@ -20,7 +20,6 @@ class ChatConnectBloc extends Bloc<ChatConnectEvent, ChatConnectState> {
     final conversationId = pref.getString(AppKeys.conversationId);
 
     if (conversationId.isNotEmpty) {
-
       ChatConnectSuccess(conversationId);
     } else {
       await failureOrUserStatus.fold(
@@ -30,7 +29,7 @@ class ChatConnectBloc extends Bloc<ChatConnectEvent, ChatConnectState> {
         (userData) async {
           // Step 2: Fetch token after user registration succeeds
           final failureOrConversationId =
-              await registerUserUseCase.createConversation(userToken);
+              await registerUserUseCase.createConversation();
 
           // Handle token fetch result
           emit(failureOrConversationId.fold(

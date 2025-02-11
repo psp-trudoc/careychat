@@ -33,9 +33,9 @@ class ChatConnectRepositoryImp extends ChatConnectRepository {
   }
 
   @override
-  Future<Either<Failure, String>> createConversation(String token) async {
+  Future<Either<Failure, String>> createConversation() async {
     try {
-      final conversationId = await remoteDataSource.createConversation(token);
+      final conversationId = await remoteDataSource.createConversation();
       return Right(conversationId);
     } on BadRequest catch (e) {
       return Left(BadRequestFailure(e.toString()));

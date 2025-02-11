@@ -15,7 +15,7 @@ import 'package:dio/dio.dart';
 abstract class ChatDataSource {
   Future<ChatRegisterUserModel> registerUser(String userId, String name);
 
-  Future<String> createConversation(String token);
+  Future<String> createConversation();
 
   Future<ConversationMetaData> getConversationMetaData();
 
@@ -48,6 +48,10 @@ class ChatDataSourceImpl implements ChatDataSource {
 
       await prefs.saveJsonObject(AppKeys.userInfo, userData.toJson());
 
+      if (userData.token!.isNotEmpty) {
+        prefs.setString(AppKeys.token, userData.token!);
+      }
+
       return userData;
     } on DioException catch (e) {
       if (e.response?.statusCode == HttpStatus.badRequest) {
@@ -61,7 +65,7 @@ class ChatDataSourceImpl implements ChatDataSource {
   }
 
   @override
-  Future<String> createConversation(String token) async {
+  Future<String> createConversation() async {
     var jsonData = {
       "participants": ["U78853", "H4040"],
     };
@@ -69,7 +73,7 @@ class ChatDataSourceImpl implements ChatDataSource {
     try {
       final response = await _api.postWithHeaders(
           AppRoutes.registerConversation, jsonData,
-          token: token);
+          token: prefs.getString(AppKeys.token));
 
       final conversationId = response.data["conversationId"].toString();
 
@@ -99,10 +103,7 @@ class ChatDataSourceImpl implements ChatDataSource {
     try {
       final response = await _api.postWithHeaders(
           AppRoutes.getConversationMetaData, jsonData,
-          token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjY1MDE1LCJpYXQiOjE3MzY4NDY1NzJ9.mBrSjYGQj89Zwe-EBOTiKTkvyXW1NubIK_7FoIukZrw");
-
-      print(response.data);
+          token: prefs.getString(AppKeys.token));
 
       final List<dynamic> metadata = response.data["metadata"];
 
@@ -145,8 +146,9 @@ class ChatDataSourceImpl implements ChatDataSource {
     try {
       final response = await _api.postWithHeaders(
           AppRoutes.sendMessage, jsonData,
-          token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjY1MDE1LCJpYXQiOjE3MzcwMDQyMzJ9.GnAHuyeMLOn5oJj8pT51a9mV8S6c4zEZs6cohmRKuGw");
+          // token: prefs.getString(AppKeys.token)
+          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjY1MDE1LCJpYXQiOjE3MzcwMDQyMzJ9.GnAHuyeMLOn5oJj8pT51a9mV8S6c4zEZs6cohmRKuGw"
+      );
 
       print(response.data);
 
@@ -171,13 +173,10 @@ class ChatDataSourceImpl implements ChatDataSource {
       "count": 50,
     };
 
-    print(jsonData);
-
     try {
       final response = await _api.postWithHeaders(
           AppRoutes.getMessages, jsonData,
-          token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjY1MDE1LCJpYXQiOjE3MzcwMDQyMzJ9.GnAHuyeMLOn5oJj8pT51a9mV8S6c4zEZs6cohmRKuGw");
+          token: prefs.getString(AppKeys.token));
       print("logs got");
 
       print(response.data);
