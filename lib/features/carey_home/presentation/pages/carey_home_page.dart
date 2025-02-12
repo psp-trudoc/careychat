@@ -50,10 +50,6 @@ class CareyHomePageState extends State<CareyHomePage> {
 
   _handleAttachmentPressed() {}
 
-  _handleMessageTap(BuildContext _, types.Message message) async {
-    print("_handleMessageTap");
-  }
-
   _handlePreviewDataFetched(
       types.TextMessage message, types.PreviewData previewData) {
     print("_handlePreviewDataFetched");
@@ -103,11 +99,32 @@ class CareyHomePageState extends State<CareyHomePage> {
         ),
         body: BlocConsumer<GetMessagesBloc, GetMessagesState>(
           builder: buildChat,
+          buildWhen: (context, state) {
+            return state is GetMessagesInProgress ||
+                state is GetMessagesSuccess;
+          },
           listener: (BuildContext context, GetMessagesState state) {
-            print("new msg received 22");
-            print(state);
+            if (state is ReceivedNewMessageState) {
+              print("new msg received 22");
+              print(state);
 
-            if (state is ReceivedNewMessageState) {}
+              final sender = types.User(id: state.message.sender);
+
+              final newMessage = types.TextMessage(
+                author: sender,
+                createdAt: state.message.timestamp,
+                id: state.message.trackId,
+                text: state.message.body ?? "",
+              );
+
+              setState(() {
+                _messages.insert(0, newMessage); // Add new message to the top
+              });
+            } else if (state is GetPreviousMessagesSuccess) {
+              setState(() {
+                _messages.addAll(state.messages);
+              });
+            }
           },
         ),
       );
