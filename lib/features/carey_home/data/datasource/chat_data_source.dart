@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:carey/bootstrap.dart';
+import 'package:carey/chat_manager.dart';
 import 'package:carey/core/constants/app_keys.dart';
 import 'package:carey/core/constants/app_routes.dart';
 import 'package:carey/core/errors/exceptions.dart';
@@ -21,8 +22,7 @@ abstract class ChatDataSource {
 
   Future<bool> sendMessage(String message);
 
-  Future<ChatMessagesResponseModel> getLatestMessages(
-      String conversationId, String type);
+  Future<ChatMessagesResponseModel> getLatestMessages(String type);
 }
 
 class ChatDataSourceImpl implements ChatDataSource {
@@ -35,7 +35,7 @@ class ChatDataSourceImpl implements ChatDataSource {
   Future<ChatRegisterUserModel> registerUser(String name, String token) async {
     var jsonData = {
       "name": name,
-      "role": "healthcoach",
+      "role": "patient",
       "type": "ios",
     };
     print("register user");
@@ -66,8 +66,13 @@ class ChatDataSourceImpl implements ChatDataSource {
 
   @override
   Future<String> createConversation() async {
+    ChatRegisterUserModel? user = await ChatManager().getUser();
+
+    String userID = user?.userId.toString() ?? "";
+    String hcID = user?.hcId.toString() ?? "";
+
     var jsonData = {
-      "participants": ["U78853", "H4040"],
+      "participants": ["U$userID", "H$hcID"],
     };
 
     try {
@@ -93,8 +98,12 @@ class ChatDataSourceImpl implements ChatDataSource {
 
   @override
   Future<ConversationMetaData> getConversationMetaData() async {
+    ChatRegisterUserModel? user = await ChatManager().getUser();
+
+    String userID = user?.userId.toString() ?? "";
+
     var jsonData = {
-      "userId": "U78853",
+      "userId": "U$userID",
       "pageNum": 1,
     };
 
@@ -130,12 +139,18 @@ class ChatDataSourceImpl implements ChatDataSource {
 
   @override
   Future<bool> sendMessage(String message) async {
+    ChatRegisterUserModel? user = await ChatManager().getUser();
+
+    String userID = user?.userId.toString() ?? "";
+    String hcID = user?.hcId.toString() ?? "";
+    String conversationId = prefs.getString(AppKeys.conversationId);
+
     var jsonData = {
-      "participants": ["U78853", "H4040"],
-      "conversationId": "61436",
+      "participants": ["U$userID", "H$hcID"],
+      "conversationId": conversationId,
       "mimeType": "text/plain",
       "body": message,
-      "sender": "U78853",
+      "sender": "U$userID",
       "trackId": AppUtils.generateTrackId(),
       "type": "conversation",
       "clientId": "U78853-E970F891-096A-4ECD-B0E3-08FB2C787FA3",
@@ -146,9 +161,7 @@ class ChatDataSourceImpl implements ChatDataSource {
     try {
       final response = await _api.postWithHeaders(
           AppRoutes.sendMessage, jsonData,
-          // token: prefs.getString(AppKeys.token)
-          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjY1MDE1LCJpYXQiOjE3MzcwMDQyMzJ9.GnAHuyeMLOn5oJj8pT51a9mV8S6c4zEZs6cohmRKuGw"
-      );
+          token: prefs.getString(AppKeys.token));
 
       print(response.data);
 
@@ -165,8 +178,9 @@ class ChatDataSourceImpl implements ChatDataSource {
   }
 
   @override
-  Future<ChatMessagesResponseModel> getLatestMessages(
-      String conversationId, String type) async {
+  Future<ChatMessagesResponseModel> getLatestMessages(String type) async {
+    String conversationId = prefs.getString(AppKeys.conversationId);
+
     var jsonData = {
       "conversationId": conversationId,
       "type": type,

@@ -75,10 +75,9 @@ class ChatConnectRepositoryImp extends ChatConnectRepository {
 
   @override
   Future<Either<Failure, List<types.Message>>> getLatestMessages(
-      String conversationId, String type) async {
+      String type) async {
     try {
-      final msgData =
-          await remoteDataSource.getLatestMessages(conversationId, type);
+      final msgData = await remoteDataSource.getLatestMessages(type);
       return Right(_mapMessagesDataToEntity(msgData.messages ?? []));
     } on BadRequest catch (e) {
       return Left(BadRequestFailure(e.toString()));

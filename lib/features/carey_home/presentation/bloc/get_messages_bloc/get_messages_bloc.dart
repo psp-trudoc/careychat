@@ -11,8 +11,8 @@ class GetMessagesBloc extends Bloc<GetMessagesEvent, GetMessagesState> {
   Future<void> _onGetLatestMessages(
       GetLatestMessagesEvent event, Emitter<GetMessagesState> emit) async {
     emit(GetMessagesInProgress());
-    final failureOrUserStatus = await chatUserUseCase.getLatestMessages(
-        event.conversationId, event.type);
+    final failureOrUserStatus =
+        await chatUserUseCase.getLatestMessages(event.type);
 
     emit(failureOrUserStatus.fold(
       (failure) => _handleFailure(failure),

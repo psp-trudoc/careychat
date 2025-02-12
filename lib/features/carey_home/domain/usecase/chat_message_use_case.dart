@@ -13,7 +13,7 @@ class ChatMessageUseCase {
   }
 
   Future<Either<Failure, List<types.Message>>> getLatestMessages(
-      String conversationId, String type) async {
-    return await chatRepository.getLatestMessages(conversationId, type);
+      String type) async {
+    return await chatRepository.getLatestMessages(type);
   }
 }

@@ -10,7 +10,10 @@ class ChatMessagesResponseModel {
     if (json['messages'] != null) {
       messages = <ChatMessage>[];
       json['messages'].forEach((v) {
-        messages!.add(ChatMessage.fromJson(v));
+        final msg = ChatMessage.fromJson(v);
+        if (msg.type == "conversation") {
+          messages!.add(ChatMessage.fromJson(v));
+        }
       });
       count = messages?.length ?? 0;
     }

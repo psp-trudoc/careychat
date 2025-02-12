@@ -16,6 +16,5 @@ abstract class ChatConnectRepository {
 
   Future<Either<Failure, bool>> sendMessage(String message);
 
-  Future<Either<Failure, List<types.Message>>> getLatestMessages(
-      String conversationId, String type);
+  Future<Either<Failure, List<types.Message>>> getLatestMessages(String type);
 }
