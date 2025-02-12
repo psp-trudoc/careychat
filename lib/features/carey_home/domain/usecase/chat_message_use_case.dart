@@ -12,8 +12,12 @@ class ChatMessageUseCase {
     return await chatRepository.sendMessage(msg);
   }
 
-  Future<Either<Failure, List<types.Message>>> getLatestMessages(
-      String type) async {
-    return await chatRepository.getLatestMessages(type);
+  Future<Either<Failure, List<types.Message>>> getLatestMessages() async {
+    return await chatRepository.getLatestMessages();
   }
+
+  Future<Either<Failure, List<types.Message>>> getPreviousMessages(String messageId) async {
+    return await chatRepository.getPreviousMessages(messageId);
+  }
+
 }

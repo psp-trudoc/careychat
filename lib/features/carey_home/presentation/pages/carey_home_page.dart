@@ -1,6 +1,7 @@
 import 'package:carey/chat_manager.dart';
 import 'package:carey/core/utils/app_utils.dart';
 import 'package:carey/core/widgets/app_bar.dart';
+import 'package:carey/features/carey_home/domain/entities/chat_register_user.dart';
 import 'package:carey/features/carey_home/presentation/bloc/get_messages_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/bloc/send_message_bloc/index.dart';
 import 'package:carey/features/carey_home/presentation/widgets/carey_input_bar_widget.dart';
@@ -22,38 +23,32 @@ class CareyHomePage extends StatefulWidget {
 class CareyHomePageState extends State<CareyHomePage> {
   List<types.Message> _messages = [];
 
-  final _user = const types.User(
-    id: 'U78853',
-  );
+  late types.User _user;
 
   @override
   void initState() {
     super.initState();
 
-    loadHistory();
+    loadUser();
+
+    loadLatestMessages();
   }
 
-  loadHistory() {
-    context.read<GetMessagesBloc>().add(GetLatestMessagesEvent(
-        conversationId: "61436", type: "latestWithConversationId"));
-  }
+  loadUser() async {
+    ChatRegisterUserModel? user = await ChatManager().getUser();
 
-  _handleAttachmentPressed() {
-    const hc = types.User(
-      id: 'H4040',
+    String userID = user?.userId.toString() ?? "";
+
+    _user = types.User(
+      id: 'U$userID',
     );
-
-    final newMessage = types.TextMessage(
-      author: hc,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      id: AppUtils.generateTrackId(),
-      text: "Halo mike check",
-    );
-
-    setState(() {
-      _messages.insert(0, newMessage);
-    });
   }
+
+  loadLatestMessages() {
+    context.read<GetMessagesBloc>().add(GetLatestMessagesEvent());
+  }
+
+  _handleAttachmentPressed() {}
 
   _handleMessageTap(BuildContext _, types.Message message) async {
     print("_handleMessageTap");
@@ -65,6 +60,19 @@ class CareyHomePageState extends State<CareyHomePage> {
   }
 
   _handleSendPressed(types.PartialText message) {}
+
+  Future<void> _handlePagination() async {
+    if (_messages.isEmpty) {
+      return;
+    }
+    print("pagination !!!!!!!!!!!!!!!!");
+
+    String msgID = _messages.last.id;
+
+    context
+        .read<GetMessagesBloc>()
+        .add(GetPreviousMessagesEvent(messageId: msgID));
+  }
 
   sendMessage(String msg) {
     if (msg.isNotEmpty) {
@@ -133,14 +141,16 @@ class CareyHomePageState extends State<CareyHomePage> {
 
   Chat buildChatUI() {
     return Chat(
-        messages: _messages,
-        onAttachmentPressed: _handleAttachmentPressed,
-        onPreviewDataFetched: _handlePreviewDataFetched,
-        onSendPressed: _handleSendPressed,
-        showUserAvatars: false,
-        showUserNames: true,
-        user: _user,
-        customBottomWidget: buildBottomBar());
+      messages: _messages,
+      onAttachmentPressed: _handleAttachmentPressed,
+      onPreviewDataFetched: _handlePreviewDataFetched,
+      onSendPressed: _handleSendPressed,
+      showUserAvatars: false,
+      showUserNames: true,
+      user: _user,
+      customBottomWidget: buildBottomBar(),
+      onEndReached: _handlePagination,
+    );
   }
 
   Widget buildBottomBar() {

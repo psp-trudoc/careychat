@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:carey/core/errors/exceptions.dart';
 import 'package:carey/core/errors/failure.dart';
 import 'package:carey/features/carey_home/data/datasource/chat_data_source.dart';
@@ -74,10 +72,9 @@ class ChatConnectRepositoryImp extends ChatConnectRepository {
   }
 
   @override
-  Future<Either<Failure, List<types.Message>>> getLatestMessages(
-      String type) async {
+  Future<Either<Failure, List<types.Message>>> getLatestMessages() async {
     try {
-      final msgData = await remoteDataSource.getLatestMessages(type);
+      final msgData = await remoteDataSource.getLatestMessages();
       return Right(_mapMessagesDataToEntity(msgData.messages ?? []));
     } on BadRequest catch (e) {
       return Left(BadRequestFailure(e.toString()));
@@ -87,6 +84,21 @@ class ChatConnectRepositoryImp extends ChatConnectRepository {
       return Left(UnknownFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, List<types.Message>>> getPreviousMessages(String messageId) async {
+    try {
+      final msgData = await remoteDataSource.getPreviousMessages(messageId);
+      return Right(_mapMessagesDataToEntity(msgData.messages ?? []));
+    } on BadRequest catch (e) {
+      return Left(BadRequestFailure(e.toString()));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.toString()));
+    } on Exception catch (e) {
+      return Left(UnknownFailure(e.toString()));
+    }
+  }
+
 
   List<types.Message> _mapMessagesDataToEntity(List<ChatMessage> messages) {
     List<types.Message> msgArray = [];
@@ -99,7 +111,7 @@ class ChatConnectRepositoryImp extends ChatConnectRepository {
               id: msg.sender,
             ),
             createdAt: msg.timestamp,
-            id: msg.trackId,
+            id: msg.id.toString(),
             text: msg.body ?? "",
           ),
         );

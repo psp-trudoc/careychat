@@ -29,3 +29,17 @@ final class ReceivedNewMessageState extends GetMessagesState {
 
   ReceivedNewMessageState(this.message);
 }
+
+final class GetPreviousMessagesInProgress extends GetMessagesState {}
+
+final class GetPreviousMessagesSuccess extends GetMessagesState {
+  final List<types.Message> messages;
+
+  GetPreviousMessagesSuccess(this.messages);
+}
+
+final class GetPreviousMessagesFailure extends GetMessagesState {
+  final String error;
+
+  GetPreviousMessagesFailure(this.error);
+}

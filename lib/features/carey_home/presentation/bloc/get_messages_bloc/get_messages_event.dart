@@ -3,10 +3,13 @@ part of 'index.dart';
 sealed class GetMessagesEvent {}
 
 class GetLatestMessagesEvent extends GetMessagesEvent {
-  final String conversationId;
-  final String type;
+  GetLatestMessagesEvent();
+}
 
-  GetLatestMessagesEvent({required this.conversationId, required this.type});
+class GetPreviousMessagesEvent extends GetMessagesEvent {
+  final String messageId;
+
+  GetPreviousMessagesEvent({required this.messageId});
 }
 
 class ReceivedNewMessage extends GetMessagesEvent {

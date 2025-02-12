@@ -22,7 +22,9 @@ abstract class ChatDataSource {
 
   Future<bool> sendMessage(String message);
 
-  Future<ChatMessagesResponseModel> getLatestMessages(String type);
+  Future<ChatMessagesResponseModel> getLatestMessages();
+
+  Future<ChatMessagesResponseModel> getPreviousMessages(String messageId);
 }
 
 class ChatDataSourceImpl implements ChatDataSource {
@@ -178,12 +180,41 @@ class ChatDataSourceImpl implements ChatDataSource {
   }
 
   @override
-  Future<ChatMessagesResponseModel> getLatestMessages(String type) async {
+  Future<ChatMessagesResponseModel> getLatestMessages() async {
     String conversationId = prefs.getString(AppKeys.conversationId);
 
     var jsonData = {
       "conversationId": conversationId,
-      "type": type,
+      "type": "latestWithConversationId",
+      "count": 50,
+    };
+
+    try {
+      final response = await _api.postWithHeaders(
+          AppRoutes.getMessages, jsonData,
+          token: prefs.getString(AppKeys.token));
+      return ChatMessagesResponseModel.fromJson(response.data);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == HttpStatus.badRequest) {
+        final errorData = e.response!.data;
+        final errorMessage = errorData['message'] ?? 'An error occurred';
+        throw BadRequest(errorMessage);
+      } else {
+        throw Exception(e.message);
+      }
+    }
+  }
+
+  @override
+  Future<ChatMessagesResponseModel> getPreviousMessages(
+      String messageId) async {
+    String conversationId = prefs.getString(AppKeys.conversationId);
+
+    var jsonData = {
+      "conversationId": conversationId,
+      "type": "withConvAndMessageId",
+      "fromId": messageId,
+      "direction": "greaterThan",
       "count": 50,
     };
 
